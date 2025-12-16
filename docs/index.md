@@ -12,7 +12,7 @@ It exists for people who feel:
 - skilled but misaligned  
 - willing, yet unsure *where their leverage actually is*
 
-Agency is becoming the scarce resource.
+*Agency is becoming the scarce resource.*
 
 ## Why Agency Matters Now
 
@@ -28,7 +28,7 @@ Today:
 
 AI, automation, remote work, and institutional drift have inverted the social contract. People are expected to self-navigate systems that were never designed for self-navigation.
 
-**Agency is no longer optional. It is infrastructural.**
+*Agency is no longer optional. It is infrastructural.*
 
 ## Two Kinds of Agency
 
@@ -62,7 +62,7 @@ Without external agency:
 - effort dissipates  
 - people burn out trying to push alone  
 
-**Agency is personal, but it is not solitary.**
+*Agency is personal, but it is not solitary.*
 
 ## The Failure Mode We’re In
 
@@ -79,24 +79,24 @@ Reality:
 - institutions lag reality  
 
 This creates a quiet crisis:
-> People are asked to self-direct without ever being taught how.
+- People are asked to self-direct without ever being taught how.
 
-selfdriven.agency exists to fill that gap.
+*selfdriven.agency exists to fill that gap.*
 
 ## Meaningful Futures
 
 We live in an **Internet of Information** and an **Internet of Money**.
 
-What we lack is an **Internet of Meaningful Futures (IoMF)**:
+What we lack is an **Meaningful Futures Framework**:
 - where people can explore *possible futures*  
 - test identities safely  
 - build proof of capability, not just claims  
 - coordinate with others without coercion  
 
-IoMF is not about prediction.  
-It’s about **navigability**.
+The *Meaningful Futures Framework* is not about prediction.  
+It’s about navigability.
 
-selfdriven.agency is a node in that emerging meaningful-future.
+*selfdriven.agency is a node in that emerging meaningful-future.*
 
 ## “Who Is I?”
 
