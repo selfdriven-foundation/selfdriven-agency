@@ -14,7 +14,7 @@ It exists for people who feel:
 
 *Agency is becoming the scarce resource.*
 
-## Why Agency Matters Now
+### Why Agency Matters Now
 
 For most of modern history:
 - skills were scarce  
@@ -30,9 +30,9 @@ AI, automation, remote work, and institutional drift have inverted the social co
 
 *Agency is no longer optional. It is infrastructural.*
 
-## Two Kinds of Agency
+## #Two Kinds of Agency
 
-### 1. Internal Agency  
+#### 1. Internal Agency  
 *The capacity to choose, decide, and act.*
 
 Internal agency includes:
@@ -47,7 +47,7 @@ Without internal agency:
 - decisions feel risky  
 - change feels imposed rather than chosen  
 
-### 2. External (Support) Agency  
+#### 2. External (Support) Agency  
 *The capacity to act effectively in the world.*
 
 External agency includes:
@@ -64,7 +64,7 @@ Without external agency:
 
 *Agency is personal, but it is not solitary.*
 
-## The Failure Mode We’re In
+### The Failure Mode We’re In
 
 Modern systems assume:
 - education ends before adulthood  
@@ -83,7 +83,7 @@ This creates a quiet crisis:
 
 *selfdriven.agency exists to fill that gap.*
 
-## Meaningful Futures
+### Meaningful Futures
 
 We live in an **Internet of Information** and an **Internet of Money**.
 
@@ -98,7 +98,7 @@ It’s about navigability.
 
 *selfdriven.agency is a node in that emerging meaningful-future.*
 
-## “Who Is I?”
+### “Who Is I?”
 
 At the centre of agency is a deceptively simple question:
 
@@ -118,7 +118,7 @@ selfdriven.agency treats the “I” not as a fixed object, but as:
 
 Agency begins when “I” is re-grounded.
 
-## What This Is (and Is Not)
+### What This Is (and Is Not)
 
 selfdriven.agency is:
 - a **practice space**, not a doctrine  
@@ -132,14 +132,14 @@ It is not:
 - a replacement identity  
 - a top-down program  
 
-## The Core Hypothesis
+### The Core Hypothesis
 
 *When people are given the tools to understand themselves, their options, and their leverage, they will act responsibly—without being forced.*
 
 Agency is not chaos.  
 Lack of agency is.
 
-## Closing
+### Closing
 
 We are entering a period where:
 - systems adapt faster than people  
@@ -152,9 +152,9 @@ Not by telling people what to do.
 But by helping them *be able to do*.
 
 Agency is not power over others.  
-It is power **with oneself**, exercised in the world.
+It is power with oneself, exercised in the world.
 
-That is the work.
+*That is the work.*
 
 ---
 
