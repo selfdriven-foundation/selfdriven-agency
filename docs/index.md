@@ -158,4 +158,7 @@ It is power **with oneself**, exercised in the world.
 That is the work.
 
 ---
+
+Supported by the [selfdriven Foundation](https://selfdriven.foundation)
+
 *By Curious, Be Caring*
