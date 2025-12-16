@@ -1,0 +1,14 @@
+title: "selfdriven Institute"
+description: "
+The selfdriven Institute is a gathering place for those reimagining how society governs itself — not through control, but through care, curiosity, and shared purpose."
+baseurl: ""
+url: ""
+defaults:
+  - scope:
+      path: "pages"
+      type: "pages"
+    values:
+      layout: default
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag

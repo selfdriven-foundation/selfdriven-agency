@@ -1,0 +1,7 @@
+<div class="card-grid">
+  {% for card in site.data.cards %}
+    <a class="card {{ card.class }}" href="{{ card.url }}">
+      {{ card.title }} <span>↗</span>
+    </a>
+  {% endfor %}
+</div>
