@@ -30,9 +30,10 @@ AI, automation, remote work, and institutional drift have inverted the social co
 
 *Agency is no longer optional. It is infrastructural.*
 
-## #Two Kinds of Agency
+### Two Kinds of Agency
 
-#### 1. Internal Agency  
+#### [IA] Internal Agency
+
 *The capacity to choose, decide, and act.*
 
 Internal agency includes:
@@ -47,7 +48,8 @@ Without internal agency:
 - decisions feel risky  
 - change feels imposed rather than chosen  
 
-#### 2. External (Support) Agency  
+#### [EA] External (Support) Agency
+
 *The capacity to act effectively in the world.*
 
 External agency includes:
