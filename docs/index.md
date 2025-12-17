@@ -4,9 +4,9 @@ title: Home - selfdriven Agency
 subtitle: Building Agency in a Rapidly Transforming Society
 ---
 
-## selfdriven.agency is a place for people to build agency — not motivation, not hustle, not productivity theatre—but real, durable agency in a society that is changing faster than our institutions, norms, and identities can keep up with.
+## selfdriven.agency is a place for people to build agency — not motivation, not hustle, not productivity theatre, but real, durable agency in a society that is changing faster than our institutions, norms, and identities can keep up with.
 
-It exists for people who feel:
+**It exists for people who feel:**
 - capable but constrained  
 - informed but overwhelmed  
 - skilled but misaligned  
