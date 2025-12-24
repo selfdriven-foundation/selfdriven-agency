@@ -163,3 +163,11 @@ It is power with oneself, exercised in the world.
 Supported by the [selfdriven Foundation](https://selfdriven.foundation)
 
 *By Curious, Be Caring*
+
+---
+
+### Related
+
+- [Can inorganic intelligence do useful work?](https://www.selfdriven.ai/research/useful-tasks)
+- [Traditional Skills for use with Agents (SKILL.md)](https://github.com/selfdriven-octo/skillzeb/tree/main/skills/traditional)
+
