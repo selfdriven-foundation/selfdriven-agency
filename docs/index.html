@@ -1,0 +1,599 @@
+---
+layout: null
+title: selfdriven Agency
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="selfdriven.agency — building agency in a rapidly transforming society.">
+<title>selfdriven.agency</title>
+<link rel="icon" type="image/png" href="assets/img/selfdriven-you-logo-round-4colour-wheel.png">
+<link rel="shortcut icon" href="/assets/img/selfdriven-you-logo-round-4colour-blend.png">
+<link rel="apple-touch-icon" href="/assets/img/selfdriven-you-logo-round-4colour-blend.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#09090f; --surface:#111118; --surface2:#18181f;
+  --border:rgba(255,255,255,0.08); --border2:rgba(255,255,255,0.14);
+  --text:#f0eeff; --muted:#7e7a9a; --muted2:#3d3a55;
+  --curious:#f5c842; --caring:#ff5f7e; --constructive:#00e5a0; --chill:#7b6cff; --chill-bright:#9b8fff;
+  --curious-dim:rgba(245,200,66,0.13); --caring-dim:rgba(255,95,126,0.13);
+  --constructive-dim:rgba(0,229,160,0.13); --chill-dim:rgba(123,108,255,0.13);
+  --pill:999px;
+  --display:'Bricolage Grotesque',ui-sans-serif,system-ui,sans-serif;
+  --body:'DM Sans',ui-sans-serif,system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:17px;line-height:1.6;margin:0;overflow-x:hidden;cursor:none;-webkit-font-smoothing:antialiased}
+a{color:inherit;cursor:none}
+a:focus-visible,button:focus-visible{outline:2px solid var(--curious);outline-offset:3px;border-radius:6px}
+h1,h2,h3,h4{font-family:var(--display);margin:0;text-wrap:balance}
+p{margin:0}
+.wrap{max-width:1120px;margin:0 auto;padding-inline:24px}
+@media (max-width:520px){.wrap{padding-inline:18px}}
+
+/* cursor */
+.cursor-dot{position:fixed;top:0;left:0;width:8px;height:8px;border-radius:50%;background:var(--curious);pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .12s ease,background .2s}
+.cursor-ring{position:fixed;top:0;left:0;width:34px;height:34px;border-radius:50%;border:1.5px solid rgba(240,238,255,.3);pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .2s,height .2s,border-color .2s}
+@media (hover:none){body,a{cursor:auto}.cursor-dot,.cursor-ring{display:none}}
+
+/* nav */
+nav.top{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(9,9,15,.72);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--border);padding-top:env(safe-area-inset-top,0px)}
+nav.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;height:64px}
+.logo{font-family:var(--display);font-weight:800;font-size:21px;letter-spacing:-.04em;text-decoration:none}
+.logo em{font-style:normal;background:linear-gradient(90deg,var(--curious),var(--caring),var(--constructive),var(--chill-bright));-webkit-background-clip:text;background-clip:text;color:transparent}
+.navlinks{display:flex;gap:6px;align-items:center}
+.navlinks a{font-size:14px;font-weight:500;color:var(--muted);text-decoration:none;padding:8px 12px;border-radius:var(--pill);transition:color .2s,background .2s}
+.navlinks a:hover{color:var(--text);background:var(--surface2)}
+.navlinks a.cta{color:var(--bg);background:var(--text);font-weight:600}
+.navlinks a.cta:hover{background:var(--curious);color:var(--bg)}
+@media (max-width:760px){.navlinks a:not(.cta){display:none}}
+
+/* hero */
+.hero{position:relative;overflow:hidden;padding-block:150px 90px;isolation:isolate}
+.gblob{position:absolute;border-radius:50%;filter:blur(95px);opacity:.5;z-index:-1}
+.gb1{width:520px;height:520px;background:var(--curious);top:-150px;left:-160px;animation:gb 15s ease-in-out infinite}
+.gb2{width:440px;height:440px;background:var(--caring);top:40px;right:-130px;animation:gb 19s ease-in-out infinite reverse}
+.gb3{width:360px;height:360px;background:var(--constructive);bottom:-60px;left:18%;animation:gb 23s ease-in-out infinite 3s}
+.gb4{width:320px;height:320px;background:var(--chill);bottom:20px;right:12%;animation:gb 17s ease-in-out infinite 8s}
+@keyframes gb{0%,100%{transform:translate(0,0) scale(1)}40%{transform:translate(34px,-26px) scale(1.08)}70%{transform:translate(-22px,30px) scale(.93)}}
+@media (prefers-reduced-motion:reduce){.gblob{animation:none}}
+.hero::after{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(9,9,15,.15) 0%,rgba(9,9,15,.35) 60%,var(--bg) 100%)}
+.hero-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(9,9,15,.55);border:1px solid rgba(255,255,255,.22);border-radius:var(--pill);padding:8px 18px;font-size:12px;font-weight:500;color:rgba(240,238,255,.78);letter-spacing:.08em;text-transform:uppercase;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.hero-pill .dot{width:7px;height:7px;border-radius:50%;background:var(--constructive);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(0,229,160,.6)}50%{opacity:.7;box-shadow:0 0 0 7px rgba(0,229,160,0)}}
+.hero h1{font-size:clamp(46px,8.4vw,108px);font-weight:800;letter-spacing:-.045em;line-height:.95;margin-top:28px;max-width:11ch}
+.hero h1 .scarce{display:inline-block;background:linear-gradient(95deg,var(--curious) 0%,var(--caring) 38%,var(--constructive) 70%,var(--chill-bright) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .lead{font-size:clamp(18px,2.1vw,22px);line-height:1.5;color:rgba(240,238,255,.86);max-width:60ch;margin-top:28px}
+.hero .lead b{color:var(--text);font-weight:600}
+.feel{margin-top:44px}
+.feel-label{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:rgba(240,238,255,.6)}
+.feel-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}
+@media (max-width:900px){.feel-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:460px){.feel-grid{grid-template-columns:1fr}}
+.feel-card{background:rgba(9,9,15,.6);border:1px solid var(--border2);border-radius:18px;padding:18px 18px 20px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:flex;flex-direction:column;gap:10px}
+.feel-card svg{width:22px;height:22px}
+.feel-card p{font-family:var(--display);font-weight:600;font-size:18px;letter-spacing:-.02em;line-height:1.25}
+.feel-card p span{color:var(--muted);font-weight:500}
+.fc-c svg{color:var(--curious)} .fc-k svg{color:var(--caring)} .fc-b svg{color:var(--constructive)} .fc-l svg{color:var(--chill-bright)}
+.jump-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:36px;position:relative}
+.jump-row::before{content:'';position:absolute;inset:-30px -10%;background:radial-gradient(ellipse at center,rgba(9,9,15,.55),transparent 72%);z-index:-1;pointer-events:none}
+.mode-pill{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:var(--pill);font-family:var(--display);font-size:14px;font-weight:600;text-decoration:none;border:1.5px solid transparent;transition:transform .2s,box-shadow .2s}
+.mode-pill svg{width:16px;height:16px}
+.mode-pill:hover{transform:translateY(-4px) rotate(-1.5deg);box-shadow:0 14px 36px rgba(0,0,0,.5)}
+.mp-c{background:var(--curious-dim);color:var(--curious);border-color:rgba(245,200,66,.28)}
+.mp-k{background:var(--caring-dim);color:var(--caring);border-color:rgba(255,95,126,.28)}
+.mp-b{background:var(--constructive-dim);color:var(--constructive);border-color:rgba(0,229,160,.28)}
+.mp-l{background:var(--chill-dim);color:var(--chill-bright);border-color:rgba(123,108,255,.28)}
+
+/* sections */
+section.block{padding-block:110px;border-top:1px solid var(--border)}
+@media (max-width:640px){section.block{padding-block:76px}}
+.eyebrow{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:10px}
+.eyebrow i{width:8px;height:8px;border-radius:50%;display:inline-block}
+h2.sec{font-size:clamp(34px,5.2vw,62px);font-weight:800;letter-spacing:-.04em;line-height:1;margin-top:18px;max-width:18ch}
+.sec-lead{color:rgba(240,238,255,.78);font-size:19px;max-width:62ch;margin-top:22px}
+.kicker{font-family:var(--display);font-weight:700;letter-spacing:-.03em;font-size:clamp(24px,3.2vw,34px);line-height:1.15;margin-top:56px;max-width:28ch}
+.kicker em{font-style:normal}
+
+/* then / now */
+.shift{margin-top:52px;display:grid;grid-template-columns:1fr auto 1fr;gap:0;border:1px solid var(--border2);border-radius:24px;overflow:hidden;background:var(--surface)}
+.shift-head{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;padding:18px 28px;border-bottom:1px solid var(--border);color:var(--muted)}
+.shift-head.now{color:var(--curious)}
+.shift-cell{padding:22px 28px;border-bottom:1px solid var(--border);font-family:var(--display);font-size:clamp(19px,2.2vw,24px);font-weight:600;letter-spacing:-.02em;line-height:1.25}
+.shift-cell.then{color:var(--muted)}
+.shift-arrow{display:flex;align-items:center;justify-content:center;padding:0 10px;border-bottom:1px solid var(--border);color:var(--muted2)}
+.shift-arrow svg{width:22px;height:22px}
+.shift > :nth-last-child(-n+3){border-bottom:none}
+.shift .gap{border-bottom:1px solid var(--border)}
+@media (max-width:640px){
+  .shift{grid-template-columns:1fr}
+  .shift-arrow,.shift .gap{display:none}
+  .shift-head.then-h{display:none}
+  .shift-cell.then{padding-bottom:4px;border-bottom:none;font-size:15px;font-family:var(--body);font-weight:500;text-decoration:line-through;text-decoration-color:var(--muted2)}
+  .shift > .shift-cell.now:last-child{border-bottom:none}
+}
+.inverted{margin-top:34px;color:rgba(240,238,255,.78);max-width:64ch;font-size:18px}
+
+/* two kinds */
+.agency-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:56px}
+@media (max-width:820px){.agency-grid{grid-template-columns:1fr}}
+.agency{position:relative;background:var(--surface);border:1px solid var(--border2);border-radius:28px;padding:34px;overflow:hidden;isolation:isolate}
+.agency::before{content:'';position:absolute;width:320px;height:320px;border-radius:50%;filter:blur(90px);opacity:.22;top:-140px;right:-120px;z-index:-1}
+.agency.ia::before{background:var(--curious)} .agency.ea::before{background:var(--constructive)}
+.tag{display:inline-flex;font-family:var(--mono);font-weight:700;font-size:13px;letter-spacing:.06em;padding:6px 12px;border-radius:var(--pill)}
+.ia .tag{background:var(--curious-dim);color:var(--curious);border:1px solid rgba(245,200,66,.28)}
+.ea .tag{background:var(--constructive-dim);color:var(--constructive);border:1px solid rgba(0,229,160,.28)}
+.agency h3{font-size:clamp(28px,3.4vw,38px);font-weight:800;letter-spacing:-.04em;margin-top:18px;line-height:1.05}
+.agency .def{font-size:19px;color:rgba(240,238,255,.86);margin-top:10px}
+.agency h4{font-family:var(--mono);font-size:11.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:30px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.chip{font-size:14.5px;font-weight:500;padding:7px 14px;border-radius:var(--pill);background:var(--surface2);border:1px solid var(--border2)}
+.without{list-style:none;padding:0;margin:12px 0 0;display:grid;gap:8px}
+.without li{display:flex;gap:10px;align-items:baseline;color:rgba(240,238,255,.72);font-size:16px}
+.without li::before{content:'';flex:none;width:12px;height:1.5px;background:var(--caring);transform:translateY(-4px)}
+
+/* failure mode */
+.fail{margin-top:52px;display:grid;gap:10px}
+.fail-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fail-cell{padding:22px 26px;border-radius:18px;font-family:var(--display);font-weight:600;letter-spacing:-.02em;font-size:clamp(18px,2vw,22px);line-height:1.25}
+.fail-cell small{display:block;font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px}
+.assume{background:transparent;border:1px dashed var(--muted2);color:var(--muted)}
+.assume span{text-decoration:line-through;text-decoration-color:rgba(255,95,126,.55);text-decoration-thickness:2px}
+.assume small{color:var(--muted)}
+.real{background:var(--surface);border:1px solid var(--border2)}
+.real small{color:var(--constructive)}
+@media (max-width:560px){.fail-row{grid-template-columns:1fr;gap:6px}.fail-row+.fail-row{margin-top:10px}}
+.crisis{margin-top:48px;padding:36px;border-radius:28px;background:linear-gradient(135deg,var(--caring-dim),rgba(9,9,15,0) 70%),var(--surface);border:1px solid rgba(255,95,126,.28)}
+.crisis .eyebrow{color:var(--caring)}
+.crisis p.big{font-family:var(--display);font-weight:800;letter-spacing:-.035em;font-size:clamp(26px,3.6vw,42px);line-height:1.08;margin-top:14px;max-width:22ch}
+.crisis p.sub{margin-top:18px;color:rgba(240,238,255,.78)}
+.crisis p.sub b{color:var(--text)}
+
+/* futures */
+.internets{display:grid;grid-template-columns:1fr 1fr 1.25fr;gap:14px;margin-top:52px}
+@media (max-width:820px){.internets{grid-template-columns:1fr}}
+.net{border-radius:22px;padding:26px;border:1px solid var(--border2);background:var(--surface)}
+.net small{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.net p{font-family:var(--display);font-weight:700;letter-spacing:-.03em;font-size:24px;margin-top:10px;line-height:1.15}
+.net .st{display:inline-flex;margin-top:14px;font-size:13px;font-weight:600;padding:5px 12px;border-radius:var(--pill);background:var(--surface2);color:var(--muted)}
+.net.missing{position:relative;border:1.5px solid transparent;background:linear-gradient(var(--surface),var(--surface)) padding-box,linear-gradient(120deg,var(--curious),var(--caring),var(--constructive),var(--chill-bright)) border-box}
+.net.missing .st{background:var(--chill-dim);color:var(--chill-bright)}
+.caps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:14px}
+@media (max-width:900px){.caps{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:460px){.caps{grid-template-columns:1fr}}
+.cap{border-radius:22px;padding:24px;background:var(--surface);border:1px solid var(--border)}
+.cap .ic{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center}
+.cap .ic svg{width:20px;height:20px}
+.cap p{font-family:var(--display);font-weight:600;letter-spacing:-.02em;font-size:19px;line-height:1.25;margin-top:16px}
+.cap p span{color:var(--muted);font-weight:500}
+.cap.c .ic{background:var(--curious-dim);color:var(--curious)}
+.cap.k .ic{background:var(--caring-dim);color:var(--caring)}
+.cap.b .ic{background:var(--constructive-dim);color:var(--constructive)}
+.cap.l .ic{background:var(--chill-dim);color:var(--chill-bright)}
+.navig{display:flex;flex-wrap:wrap;gap:12px 28px;align-items:baseline;margin-top:44px}
+.navig .no{font-family:var(--display);font-weight:600;font-size:clamp(22px,2.8vw,30px);letter-spacing:-.03em;color:var(--muted);text-decoration:line-through;text-decoration-color:var(--muted2)}
+.navig .yes{font-family:var(--display);font-weight:800;font-size:clamp(22px,2.8vw,30px);letter-spacing:-.03em;color:var(--chill-bright)}
+.node{margin-top:14px;color:var(--muted);font-size:16px}
+
+/* who is I */
+.whoi{position:relative;overflow:hidden;isolation:isolate}
+.bigI{font-family:var(--display);font-weight:800;letter-spacing:-.06em;line-height:.85;font-size:clamp(120px,22vw,300px);position:absolute;right:-.04em;top:40px;z-index:-1;color:transparent;-webkit-text-stroke:1.5px var(--muted2);user-select:none}
+@media (max-width:640px){.bigI{top:auto;bottom:-30px;opacity:.6}}
+.question{font-family:var(--display);font-weight:800;letter-spacing:-.04em;font-size:clamp(30px,4.6vw,56px);line-height:1.04;margin-top:22px;max-width:19ch}
+.question q{quotes:'“' '”'}
+.qs{display:grid;gap:0;margin-top:46px;max-width:760px;border-top:1px solid var(--border)}
+.qs p{padding:20px 0;border-bottom:1px solid var(--border);font-size:clamp(18px,2vw,21px);color:rgba(240,238,255,.86)}
+.qs p b{font-weight:600;color:var(--text)}
+.obvious{margin-top:28px;color:var(--muted);font-size:18px}
+.obvious b{color:var(--text);font-weight:600}
+.self-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:52px;border:1px solid var(--border2);border-radius:24px;overflow:hidden;background:var(--surface)}
+@media (max-width:900px){.self-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:460px){.self-grid{grid-template-columns:1fr}}
+.self{padding:26px 24px 28px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);margin:0 -1px -1px 0}
+.self small{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.self p{font-family:var(--display);font-weight:700;letter-spacing:-.03em;font-size:24px;line-height:1.1;margin-top:10px}
+.self code{display:inline-block;margin-top:16px;font-family:var(--mono);font-size:12px;padding:4px 10px;border-radius:8px;background:var(--surface2);border:1px solid var(--border)}
+.self.c p{color:var(--curious)} .self.k p{color:var(--caring)} .self.b p{color:var(--constructive)} .self.l p{color:var(--chill-bright)}
+.regrounded{margin-top:40px;font-family:var(--display);font-weight:700;letter-spacing:-.03em;font-size:clamp(24px,3vw,34px)}
+
+/* is / is not */
+.isnot{display:grid;grid-template-columns:1.2fr 1fr;gap:20px;margin-top:52px}
+@media (max-width:820px){.isnot{grid-template-columns:1fr}}
+.panel{border-radius:28px;padding:32px;background:var(--surface);border:1px solid var(--border2)}
+.panel h3{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.pairs{display:grid;gap:0;margin-top:14px}
+.pair{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;padding:16px 0;border-bottom:1px solid var(--border)}
+.pair:last-child{border-bottom:none}
+.pair b{font-family:var(--display);font-weight:800;letter-spacing:-.03em;font-size:clamp(22px,2.6vw,28px)}
+.pair span{color:var(--muted);font-size:16px}
+.pair span s{text-decoration-color:var(--muted2)}
+.pair:nth-child(1) b{color:var(--curious)} .pair:nth-child(2) b{color:var(--caring)} .pair:nth-child(3) b{color:var(--constructive)} .pair:nth-child(4) b{color:var(--chill-bright)}
+.panel.not{background:transparent;border-style:dashed;border-color:var(--muted2)}
+.nots{list-style:none;padding:0;margin:14px 0 0;display:grid;gap:10px}
+.nots li{display:flex;align-items:center;gap:12px;font-family:var(--display);font-weight:600;letter-spacing:-.02em;font-size:21px;color:var(--muted)}
+.nots li svg{width:18px;height:18px;flex:none;color:var(--caring)}
+
+/* hypothesis */
+.hypo{text-align:left}
+.hypo blockquote{margin:22px 0 0;font-family:var(--display);font-weight:700;letter-spacing:-.035em;font-size:clamp(28px,4.2vw,50px);line-height:1.1;max-width:24ch}
+.hypo blockquote em{font-style:normal;color:var(--constructive)}
+.chaos{display:flex;flex-wrap:wrap;gap:12px;margin-top:40px}
+.chaos span{font-family:var(--display);font-weight:700;font-size:clamp(18px,2.2vw,22px);letter-spacing:-.02em;padding:14px 22px;border-radius:var(--pill);border:1.5px solid var(--border2)}
+.chaos span:last-child{background:var(--text);color:var(--bg);border-color:var(--text)}
+
+/* closing */
+.closing{position:relative;overflow:hidden;isolation:isolate;padding-block:120px 110px;border-top:1px solid var(--border)}
+.closing .gblob{opacity:.28}
+.forces{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:44px}
+@media (max-width:760px){.forces{grid-template-columns:1fr}}
+.force{padding:22px 24px;border-radius:20px;background:rgba(17,17,24,.8);border:1px solid var(--border2);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.force p{font-family:var(--display);font-weight:600;letter-spacing:-.02em;font-size:20px;line-height:1.25}
+.force p b{font-weight:800}
+.rebalance{margin-top:56px;font-size:clamp(18px,2vw,21px);color:rgba(240,238,255,.86);max-width:48ch}
+.finale{margin-top:40px;font-family:var(--display);font-weight:800;letter-spacing:-.045em;line-height:.98;font-size:clamp(38px,6.6vw,84px)}
+.finale span{color:var(--muted)}
+.finale .able{background:linear-gradient(95deg,var(--curious),var(--caring) 40%,var(--constructive) 72%,var(--chill-bright));-webkit-background-clip:text;background-clip:text;color:transparent}
+.power{margin-top:40px;font-size:clamp(18px,2vw,21px);color:rgba(240,238,255,.86);max-width:44ch}
+.power b{color:var(--text)}
+.thework{display:inline-flex;align-items:center;gap:10px;margin-top:34px;font-family:var(--mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;padding:10px 18px;border-radius:var(--pill);background:rgba(9,9,15,.55);border:1px solid rgba(255,255,255,.22)}
+.thework i{width:7px;height:7px;border-radius:50%;background:var(--constructive);animation:pulse 2s infinite}
+
+/* footer */
+footer{border-top:1px solid var(--border);padding-block:64px calc(64px + env(safe-area-inset-bottom,0px))}
+.foot{display:grid;grid-template-columns:1.2fr 1fr;gap:40px}
+@media (max-width:760px){.foot{grid-template-columns:1fr}}
+.foot .logo{font-size:26px}
+.motto{margin-top:14px;font-family:var(--display);font-weight:600;letter-spacing:-.02em;font-size:18px}
+.motto .c{color:var(--curious)} .motto .k{color:var(--caring)}
+.support{margin-top:14px;color:var(--muted);font-size:15px}
+.support a{color:var(--text);text-decoration-color:var(--muted2);text-underline-offset:3px}
+.support a:hover{text-decoration-color:var(--curious)}
+.related h3{font-family:var(--mono);font-size:11.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.rel{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 20px;border-radius:18px;background:var(--surface);border:1px solid var(--border);text-decoration:none;margin-top:10px;transition:border-color .2s,transform .2s}
+.rel:hover{border-color:var(--border2);transform:translateX(4px)}
+.rel b{font-family:var(--display);font-weight:600;letter-spacing:-.02em;font-size:17px;display:block;line-height:1.3}
+.rel small{color:var(--muted);font-family:var(--mono);font-size:11.5px}
+.rel svg{width:18px;height:18px;flex:none;color:var(--muted)}
+.family{display:flex;flex-wrap:wrap;gap:8px;margin-top:40px;padding-top:24px;border-top:1px solid var(--border)}
+.family a{font-size:13px;color:var(--muted);text-decoration:none;padding:6px 12px;border-radius:var(--pill);border:1px solid var(--border)}
+.family a:hover{color:var(--text);border-color:var(--border2)}
+
+/* reveal — visible at rest, settles into place */
+.js .reveal{opacity:.35;transform:translateY(22px);transition:opacity .6s,transform .7s cubic-bezier(.34,1.56,.64,1)}
+.js .reveal.vis{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.js .reveal{opacity:1;transform:none;transition:none}}
+</style>
+
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="ic-telescope" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="17" cy="13" r="3"/><path d="M3 7l5.5 2.5"/><path d="M3 7l2-4 14.5 6.5-2 4"/><path d="M8.5 9.5L6 20h5l1.5-4"/><path d="M17 16v4"/></symbol>
+  <symbol id="ic-heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></symbol>
+  <symbol id="ic-hammer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 12-8.5 8.5c-.83.83-2.17.83-3 0 0 0 0 0 0 0a2.12 2.12 0 0 1 0-3L12 9"/><path d="M17.64 15 22 10.64"/><path d="m20.91 11.7-1.25-1.25c-.6-.6-.93-1.4-.93-2.25v-.86L16.01 4.6a5.56 5.56 0 0 0-3.94-1.64H9l.92.82A6.18 6.18 0 0 1 12 8.4v1.56l2 2h2.47l2.26 1.91"/></symbol>
+  <symbol id="ic-waves" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/></symbol>
+  <symbol id="ic-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></symbol>
+  <symbol id="ic-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></symbol>
+  <symbol id="ic-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+</svg>
+
+<div class="cursor-dot" id="cdot" aria-hidden="true"></div>
+<div class="cursor-ring" id="cring" aria-hidden="true"></div>
+
+<nav class="top" aria-label="Main">
+  <div class="wrap">
+    <a class="logo" href="#top">selfdriven<em>.agency</em></a>
+    <div class="navlinks">
+      <a href="#why">Why now</a>
+      <a href="#two-kinds">Two kinds</a>
+      <a href="#futures">Futures</a>
+      <a href="#who-is-i">Who is I?</a>
+      <a class="cta" href="https://selfdriven.you">selfdriven.you</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="gblob gb1"></div><div class="gblob gb2"></div><div class="gblob gb3"></div><div class="gblob gb4"></div>
+  <div class="wrap">
+    <span class="hero-pill"><span class="dot"></span>Building agency in a rapidly transforming society</span>
+    <h1>Agency is becoming the <span class="scarce">scarce&nbsp;resource.</span></h1>
+    <p class="lead">A place for people, communities &amp; organisations to build and use agency — <b>not motivation, not hustle, not productivity theatre</b>, but real, durable agency in a society changing faster than our institutions, norms and identities can keep up with.</p>
+
+    <div class="feel">
+      <div class="feel-label">It exists for people who feel</div>
+      <div class="feel-grid">
+        <div class="feel-card fc-c"><svg><use href="#ic-telescope"/></svg><p>capable <span>but</span> constrained</p></div>
+        <div class="feel-card fc-k"><svg><use href="#ic-heart"/></svg><p>informed <span>but</span> overwhelmed</p></div>
+        <div class="feel-card fc-b"><svg><use href="#ic-hammer"/></svg><p>skilled <span>but</span> misaligned</p></div>
+        <div class="feel-card fc-l"><svg><use href="#ic-waves"/></svg><p>willing, <span>yet unsure where their leverage actually is</span></p></div>
+      </div>
+    </div>
+
+    <div class="jump-row">
+      <a class="mode-pill mp-c" href="#why"><svg><use href="#ic-telescope"/></svg>Why agency, why now</a>
+      <a class="mode-pill mp-k" href="#two-kinds"><svg><use href="#ic-heart"/></svg>Two kinds of agency</a>
+      <a class="mode-pill mp-b" href="#futures"><svg><use href="#ic-hammer"/></svg>Meaningful futures</a>
+      <a class="mode-pill mp-l" href="#who-is-i"><svg><use href="#ic-waves"/></svg>Who is “I”?</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- WHY NOW -->
+  <section class="block" id="why">
+    <div class="wrap">
+      <div class="eyebrow reveal"><i style="background:var(--curious)"></i>Why agency matters now</div>
+      <h2 class="sec reveal">The social contract got inverted.</h2>
+
+      <div class="shift reveal" role="table" aria-label="How the conditions for agency changed">
+        <div class="shift-head then-h" role="columnheader">For most of modern history</div>
+        <div class="gap" aria-hidden="true"></div>
+        <div class="shift-head now" role="columnheader">Today</div>
+
+        <div class="shift-cell then" role="cell">skills were scarce</div>
+        <div class="shift-arrow" aria-hidden="true"><svg><use href="#ic-arrow"/></svg></div>
+        <div class="shift-cell now" role="cell">skills are abundant</div>
+
+        <div class="shift-cell then" role="cell">roles were stable</div>
+        <div class="shift-arrow" aria-hidden="true"><svg><use href="#ic-arrow"/></svg></div>
+        <div class="shift-cell now" role="cell">roles are fluid</div>
+
+        <div class="shift-cell then" role="cell">institutions absorbed uncertainty</div>
+        <div class="shift-arrow" aria-hidden="true"><svg><use href="#ic-arrow"/></svg></div>
+        <div class="shift-cell now" role="cell">uncertainty is pushed onto individuals</div>
+      </div>
+
+      <p class="inverted reveal">AI, automation, remote work and institutional drift have inverted the social contract. People are expected to self-navigate systems that were never designed for self-navigation.</p>
+      <p class="kicker reveal">Agency is no longer optional. <em style="color:var(--curious)">It is infrastructural.</em></p>
+    </div>
+  </section>
+
+  <!-- TWO KINDS -->
+  <section class="block" id="two-kinds">
+    <div class="wrap">
+      <div class="eyebrow reveal"><i style="background:var(--caring)"></i>Two kinds of agency</div>
+      <h2 class="sec reveal">Choosing is one half. Acting in the world is the other.</h2>
+
+      <div class="agency-grid">
+        <article class="agency ia reveal">
+          <span class="tag">[IA]</span>
+          <h3>Internal Agency</h3>
+          <p class="def">The capacity to choose, decide and act.</p>
+          <h4>Includes</h4>
+          <div class="chips">
+            <span class="chip">sense-making</span>
+            <span class="chip">confidence to act without permission</span>
+            <span class="chip">understanding trade-offs</span>
+            <span class="chip">the ability to say “no”</span>
+            <span class="chip">authorship over one’s direction</span>
+          </div>
+          <h4>Without it</h4>
+          <ul class="without">
+            <li>options feel overwhelming</li>
+            <li>decisions feel risky</li>
+            <li>change feels imposed rather than chosen</li>
+          </ul>
+        </article>
+
+        <article class="agency ea reveal">
+          <span class="tag">[EA]</span>
+          <h3>External (Support) Agency</h3>
+          <p class="def">The capacity to act effectively in the world.</p>
+          <h4>Includes</h4>
+          <div class="chips">
+            <span class="chip">access to tools, platforms &amp; systems</span>
+            <span class="chip">trusted frameworks</span>
+            <span class="chip">social legitimacy</span>
+            <span class="chip">coordination with others</span>
+            <span class="chip">scaffolding that turns intent into action</span>
+          </div>
+          <h4>Without it</h4>
+          <ul class="without">
+            <li>good decisions stall</li>
+            <li>effort dissipates</li>
+            <li>people burn out trying to push alone</li>
+          </ul>
+        </article>
+      </div>
+
+      <p class="kicker reveal">Agency is personal, <em style="color:var(--caring)">but it is not solitary.</em></p>
+    </div>
+  </section>
+
+  <!-- FAILURE MODE -->
+  <section class="block" id="failure">
+    <div class="wrap">
+      <div class="eyebrow reveal"><i style="background:var(--caring)"></i>The failure mode we’re in</div>
+      <h2 class="sec reveal">Systems built for a world that no longer exists.</h2>
+
+      <div class="fail">
+        <div class="fail-row reveal">
+          <div class="fail-cell assume"><small>Modern systems assume</small><span>education ends before adulthood</span></div>
+          <div class="fail-cell real"><small>Reality</small>learning is continuous</div>
+        </div>
+        <div class="fail-row reveal">
+          <div class="fail-cell assume"><small>Modern systems assume</small><span>careers are linear</span></div>
+          <div class="fail-cell real"><small>Reality</small>careers are fragmented</div>
+        </div>
+        <div class="fail-row reveal">
+          <div class="fail-cell assume"><small>Modern systems assume</small><span>identity is stable</span></div>
+          <div class="fail-cell real"><small>Reality</small>identity is negotiated</div>
+        </div>
+        <div class="fail-row reveal">
+          <div class="fail-cell assume"><small>Modern systems assume</small><span>institutions know best</span></div>
+          <div class="fail-cell real"><small>Reality</small>institutions lag reality</div>
+        </div>
+      </div>
+
+      <div class="crisis reveal">
+        <div class="eyebrow">A quiet crisis</div>
+        <p class="big">People are asked to self-direct without ever being taught how.</p>
+        <p class="sub"><b>selfdriven.agency</b> exists to fill that gap.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MEANINGFUL FUTURES -->
+  <section class="block" id="futures">
+    <div class="wrap">
+      <div class="eyebrow reveal"><i style="background:var(--constructive)"></i>Meaningful futures</div>
+      <h2 class="sec reveal">We have two internets. The third is missing.</h2>
+
+      <div class="internets">
+        <div class="net reveal"><small>We live in an</small><p>Internet of Information</p><span class="st">exists</span></div>
+        <div class="net reveal"><small>and an</small><p>Internet of Money</p><span class="st">exists</span></div>
+        <div class="net missing reveal"><small>What we lack is a</small><p>Meaningful Futures Framework</p><span class="st">emerging</span></div>
+      </div>
+
+      <div class="caps">
+        <div class="cap c reveal"><div class="ic"><svg><use href="#ic-telescope"/></svg></div><p>explore <span>possible futures</span></p></div>
+        <div class="cap k reveal"><div class="ic"><svg><use href="#ic-heart"/></svg></div><p>test identities <span>safely</span></p></div>
+        <div class="cap b reveal"><div class="ic"><svg><use href="#ic-hammer"/></svg></div><p>build proof of capability, <span>not just claims</span></p></div>
+        <div class="cap l reveal"><div class="ic"><svg><use href="#ic-waves"/></svg></div><p>coordinate with others <span>without coercion</span></p></div>
+      </div>
+
+      <div class="navig reveal"><span class="no">not about prediction</span><span class="yes">about navigability.</span></div>
+      <p class="node reveal">selfdriven.agency is a node in that emerging meaningful future.</p>
+    </div>
+  </section>
+
+  <!-- WHO IS I -->
+  <section class="block whoi" id="who-is-i">
+    <div class="bigI" aria-hidden="true">“I”</div>
+    <div class="wrap">
+      <div class="eyebrow reveal"><i style="background:var(--chill-bright)"></i>Who is “I”?</div>
+      <p class="question reveal">Who is <q>I</q> when everything is mediated, assisted, augmented or automated?</p>
+
+      <div class="qs">
+        <p class="reveal">If AI helps me think, <b>who authored the thought?</b></p>
+        <p class="reveal">If systems guide my choices, <b>where does responsibility live?</b></p>
+        <p class="reveal">If identity is fragmented across platforms, <b>where is continuity?</b></p>
+      </div>
+      <p class="obvious reveal">We treat “I” as obvious. <b>It is no longer so.</b></p>
+
+      <div class="self-grid reveal" aria-label="How selfdriven.agency treats the I">
+        <div class="self c"><small>“I” as</small><p>a locus of intent</p><code>intent</code></div>
+        <div class="self k"><small>“I” as</small><p>a holder of responsibility</p><code>responsibility</code></div>
+        <div class="self b"><small>“I” as</small><p>a signer of actions</p><code>sig</code></div>
+        <div class="self l"><small>“I” as</small><p>a steward of consequences</p><code>consequence</code></div>
+      </div>
+      <p class="regrounded reveal">Agency begins when “I” is re-grounded.</p>
+    </div>
+  </section>
+
+  <!-- IS / IS NOT -->
+  <section class="block" id="is">
+    <div class="wrap">
+      <div class="eyebrow reveal"><i style="background:var(--curious)"></i>What this is (and is not)</div>
+      <h2 class="sec reveal">A practice space, not a program.</h2>
+
+      <div class="isnot">
+        <div class="panel reveal">
+          <h3>selfdriven.agency is</h3>
+          <div class="pairs">
+            <div class="pair"><b>a practice space</b><span><s>not a doctrine</s></span></div>
+            <div class="pair"><b>a scaffold</b><span><s>not a prescription</s></span></div>
+            <div class="pair"><b>a commons</b><span><s>not a funnel</s></span></div>
+            <div class="pair"><b>a capability builder</b><span><s>not a content mill</s></span></div>
+          </div>
+        </div>
+        <div class="panel not reveal">
+          <h3>It is not</h3>
+          <ul class="nots">
+            <li><svg><use href="#ic-x"/></svg>a productivity hack</li>
+            <li><svg><use href="#ic-x"/></svg>a motivational brand</li>
+            <li><svg><use href="#ic-x"/></svg>a replacement identity</li>
+            <li><svg><use href="#ic-x"/></svg>a top-down program</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HYPOTHESIS -->
+  <section class="block hypo" id="hypothesis">
+    <div class="wrap">
+      <div class="eyebrow reveal"><i style="background:var(--constructive)"></i>The core hypothesis</div>
+      <blockquote class="reveal">When people are given the tools to understand themselves, their options and their leverage, <em>they will act responsibly — without being forced.</em></blockquote>
+      <div class="chaos reveal"><span>Agency is not chaos.</span><span>Lack of agency is.</span></div>
+    </div>
+  </section>
+
+  <!-- CLOSING -->
+  <section class="closing" id="closing">
+    <div class="gblob gb1"></div><div class="gblob gb2"></div><div class="gblob gb3"></div><div class="gblob gb4"></div>
+    <div class="wrap">
+      <div class="eyebrow reveal"><i style="background:var(--chill-bright)"></i>We are entering a period where</div>
+      <div class="forces">
+        <div class="force reveal"><p>systems adapt <b style="color:var(--curious)">faster</b> than people</p></div>
+        <div class="force reveal"><p>tools <b style="color:var(--caring)">outpace</b> understanding</p></div>
+        <div class="force reveal"><p>choice <b style="color:var(--constructive)">increases</b> while clarity <b style="color:var(--chill-bright)">decreases</b></p></div>
+      </div>
+      <p class="rebalance reveal">selfdriven.agency exists to rebalance that equation.</p>
+      <p class="finale reveal"><span>Not by telling people what to do.</span><br>But by helping them <span class="able">be able to do.</span></p>
+      <p class="power reveal">Agency is not power over others. <b>It is power with oneself, exercised in the world.</b></p>
+      <span class="thework reveal"><i></i>That is the work.</span>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a class="logo" href="#top">selfdriven<em>.agency</em></a>
+        <p class="motto"><span class="c">Be Curious</span>, <span class="k">Be Caring</span></p>
+        <p class="support">Supported by the <a href="https://selfdriven.foundation">selfdriven Foundation</a></p>
+      </div>
+      <div class="related">
+        <h3>Related</h3>
+        <a class="rel" href="https://www.selfdriven.ai/research/useful-tasks">
+          <span><b>Can inorganic intelligence do useful work?</b><small>selfdriven.ai / research</small></span>
+          <svg><use href="#ic-out"/></svg>
+        </a>
+        <a class="rel" href="https://github.com/selfdriven-octo/skillzeb/tree/main/skills/traditional">
+          <span><b>Traditional Skills for use with Agents</b><small>SKILL.md · skillzeb</small></span>
+          <svg><use href="#ic-out"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="family">
+      <a href="https://selfdriven.you">selfdriven.you</a>
+      <a href="https://selfdriven.foundation">selfdriven.foundation</a>
+      <a href="https://www.selfdriven.ai">selfdriven.ai</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.documentElement.classList.add('js');
+(function(){
+  var dot=document.getElementById('cdot'), ring=document.getElementById('cring');
+  var rx=0,ry=0,dx=0,dy=0;
+  document.addEventListener('mousemove',function(e){ dx=e.clientX; dy=e.clientY; dot.style.left=dx+'px'; dot.style.top=dy+'px'; });
+  function loop(){ rx+=(dx-rx)*.18; ry+=(dy-ry)*.18; ring.style.left=rx+'px'; ring.style.top=ry+'px'; requestAnimationFrame(loop); }
+  loop();
+  document.querySelectorAll('a,.cap,.feel-card').forEach(function(el){
+    el.addEventListener('mouseenter',function(){ ring.style.width='52px'; ring.style.height='52px'; ring.style.borderColor='rgba(245,200,66,.6)'; });
+    el.addEventListener('mouseleave',function(){ ring.style.width='34px'; ring.style.height='34px'; ring.style.borderColor='rgba(240,238,255,.3)'; });
+  });
+})();
+(function(){
+  var els=document.querySelectorAll('.reveal');
+  if(!('IntersectionObserver' in window)){ els.forEach(function(el){el.classList.add('vis')}); return; }
+  var io=new IntersectionObserver(function(e){ e.forEach(function(x){ if(x.isIntersecting){ x.target.classList.add('vis'); io.unobserve(x.target); } }); },{threshold:.14});
+  els.forEach(function(el){ io.observe(el); });
+})();
+</script>
+
+</body>
+</html>
