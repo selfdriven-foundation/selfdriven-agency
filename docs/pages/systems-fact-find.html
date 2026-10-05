@@ -1,0 +1,997 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="Plain-language fact-find covering accounting, tax compliance, legal and communication.">
+<title>Systems Fact-Find</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: a working questionnaire. Sticky section rail (left column on desktop, chip strip on phones) beside one readable column of questions; Review & share summarises coverage, open items and exports. Tokens follow selfdriven.agency. */
+:root{
+	--paper:#ffffff;
+	--surface:#f6f5f7;
+	--ink:#24202a;
+	--muted:#625c65;
+	--line:#e6e3e7;
+	--accent:#de5a31;
+	--accent-ink:#b53e1a;
+	--accent-soft:#fbebe4;
+	--flag:#8a5d00;
+	--flag-soft:#fdf2d4;
+	--ok:#286647;
+	--btn-bg:#24202a;
+	--btn-fg:#ffffff;
+	--on-accent:#ffffff;
+	--font-display:'Space Grotesk','Helvetica Neue',Arial,sans-serif;
+	--font-body:'DM Sans','Helvetica Neue',Arial,sans-serif;
+	--font-mono:ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+	:root:not([data-theme="light"]){
+		--paper:#141217;--surface:#1d1b21;--ink:#f1eef3;--muted:#b3acb7;--line:#302c35;
+		--accent:#e8673f;--accent-ink:#f2916f;--accent-soft:#3a2219;
+		--flag:#ecbd52;--flag-soft:#33290f;--ok:#62c393;
+		--btn-bg:#f1eef3;--btn-fg:#141217;--on-accent:#ffffff;
+		color-scheme:dark;
+	}
+}
+:root[data-theme="dark"]{
+	--paper:#141217;--surface:#1d1b21;--ink:#f1eef3;--muted:#b3acb7;--line:#302c35;
+	--accent:#e8673f;--accent-ink:#f2916f;--accent-soft:#3a2219;
+	--flag:#ecbd52;--flag-soft:#33290f;--ok:#62c393;
+	--btn-bg:#f1eef3;--btn-fg:#141217;--on-accent:#ffffff;
+	color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 var(--font-body)}
+h1,h2,h3{font-family:var(--font-display);letter-spacing:-.03em;line-height:1.12;text-wrap:balance;margin:0}
+p{margin:0}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-ink);margin-bottom:8px}
+
+/* Header */
+.top{border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;flex-wrap:wrap;gap:20px 40px;align-items:flex-end;justify-content:space-between;padding-block:26px 22px}
+.brand{min-width:0;flex:1 1 380px}
+.brand h1{font-size:clamp(1.9rem,4.2vw,2.7rem)}
+.brand p.lede{margin-top:10px;color:var(--muted);max-width:36em}
+.recbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;flex:1 1 340px;max-width:460px;min-width:0}
+.recbar>label{width:100%;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.status{width:100%;font-size:13px;color:var(--muted)}
+.status.warn{color:var(--flag);font-weight:600}
+
+select,input[type=text],textarea{font:inherit;font-size:16px;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:10px 12px;width:100%;min-width:0}
+select{flex:1 1 200px;width:auto;cursor:pointer}
+textarea{resize:vertical;min-height:88px;line-height:1.5}
+input[type=text]:hover,textarea:hover,select:hover{border-color:var(--muted)}
+input[type=text]:focus,textarea:focus,select:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:600;font-size:14px;line-height:1.1;border-radius:6px;padding:10px 16px;min-height:42px;border:1px solid var(--btn-bg);background:var(--btn-bg);color:var(--btn-fg);cursor:pointer;text-decoration:none;transition:background .15s,border-color .15s,color .15s}
+.btn:hover{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--ink);background:transparent;color:var(--ink)}
+.btn.danger{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-ink)}
+.btn svg{width:16px;height:16px;flex:0 0 auto}
+.btn-row{display:flex;flex-wrap:wrap;gap:8px}
+.linkish{background:none;border:0;padding:0;color:var(--accent-ink);font-weight:600;text-decoration:underline;text-underline-offset:4px;cursor:pointer}
+
+/* Layout */
+.layout{display:grid;grid-template-columns:minmax(0,1fr)}
+.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);border-bottom:1px solid var(--line);margin-inline:-20px;padding:10px 20px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.rail::-webkit-scrollbar{display:none}
+.nav-btn{flex:0 0 auto;display:grid;grid-template-columns:auto auto;gap:4px 10px;align-items:center;text-align:left;background:var(--surface);border:1px solid transparent;border-radius:8px;padding:8px 12px;cursor:pointer}
+.nav-btn:hover{border-color:var(--line)}
+.nav-btn[aria-current="step"]{background:var(--paper);border-color:var(--ink)}
+.nav-name{font-weight:600;font-size:14px;white-space:nowrap}
+.nav-meta{display:flex;gap:6px;align-items:center;justify-content:flex-end;font:12px/1 var(--font-mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.nav-flag{background:var(--flag-soft);color:var(--flag);border-radius:999px;padding:3px 6px;font-weight:700}
+.nav-bar{grid-column:1/-1;height:3px;background:var(--line);border-radius:2px;overflow:hidden}
+.nav-bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+.nav-btn.complete .nav-bar i{background:var(--ok)}
+.nav-btn.dim .nav-name{color:var(--muted);font-weight:500}
+.nav-btn.review{background:transparent;border-color:var(--line)}
+.nav-btn.review[aria-current="step"]{border-color:var(--ink)}
+.rail-note{display:none}
+
+.main{min-width:0;max-width:760px;padding-block:28px 72px;scroll-margin-top:70px}
+.main:focus{outline:none}
+
+@media (min-width:960px){
+	.layout{grid-template-columns:240px minmax(0,1fr);gap:56px}
+	.rail{flex-direction:column;align-self:start;margin:0;padding:28px 0 28px;border:0;overflow:visible;gap:2px;top:env(safe-area-inset-top,0px)}
+	.nav-btn{width:100%;background:transparent;border-radius:6px;padding:10px 12px}
+	.nav-btn[aria-current="step"]{background:var(--surface);border-color:transparent}
+	.nav-btn[aria-current="step"] .nav-name{color:var(--accent-ink)}
+	.nav-btn.review{margin-top:10px}
+	.nav-btn.review[aria-current="step"]{border-color:var(--line)}
+	.rail-note{display:block;margin-top:18px;padding:0 12px;font-size:13px;color:var(--muted)}
+	.main{padding-block:36px 96px;scroll-margin-top:12px}
+}
+
+/* Section head */
+.sec-head{display:grid;gap:10px;padding-bottom:22px;border-bottom:1px solid var(--line)}
+.sec-head h2{font-size:clamp(1.7rem,3.4vw,2.3rem)}
+.sec-head .intro{color:var(--muted);font-size:17px;max-width:36em}
+.sec-meta{font:13px var(--font-mono);color:var(--muted);font-variant-numeric:tabular-nums}
+
+.banner{margin-top:22px;padding:14px 16px;border-radius:8px;background:var(--surface);display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between;font-size:15px}
+.banner p{flex:1 1 280px;min-width:0}
+.banner.example{background:var(--accent-soft)}
+
+.steps{list-style:none;counter-reset:s;margin:24px 0 0;padding:0;display:grid;gap:14px}
+.steps li{counter-increment:s;display:grid;grid-template-columns:32px minmax(0,1fr);gap:12px;align-items:start}
+.steps li::before{content:counter(s);display:grid;place-items:center;width:32px;height:32px;border-radius:50%;border:1px solid var(--line);font:600 14px var(--font-display);color:var(--accent-ink)}
+.steps b{display:block}
+.steps span{color:var(--muted);font-size:15px}
+.privacy{margin-top:20px;font-size:14px;color:var(--muted);padding-left:14px;border-left:2px solid var(--flag)}
+
+/* Groups and questions */
+.group{margin-top:40px}
+.group-head{display:grid;gap:4px;padding-bottom:6px}
+.lens{font:600 11px var(--font-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink)}
+.group-head h3{font-size:1.3rem}
+.group-head p{color:var(--muted);font-size:14px}
+.q{padding-block:20px;border-top:1px solid var(--line)}
+.q-label{display:flex;gap:10px;align-items:baseline;font-weight:600;font-size:17px;line-height:1.4}
+.q-label::before{content:"";flex:0 0 8px;width:8px;height:8px;border-radius:50%;border:1.5px solid var(--line);transform:translateY(-1px)}
+.q.answered .q-label::before{background:var(--ok);border-color:var(--ok)}
+.q.flagged .q-label::before{background:var(--flag);border-color:var(--flag)}
+.q-hint{color:var(--muted);font-size:14px;margin:4px 0 0 18px}
+.q-body{margin:12px 0 0 18px;display:grid;gap:10px}
+.q-foot{margin:12px 0 0 18px;display:grid;gap:8px}
+
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{position:relative;display:inline-flex}
+.opt input{position:absolute;opacity:0;width:1px;height:1px;margin:0;pointer-events:none}
+.opt span{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:8px 14px;border:1px solid var(--line);border-radius:999px;font-size:15px;line-height:1.25;cursor:pointer;background:var(--paper);user-select:none;transition:border-color .12s,background .12s}
+.opt span:hover{border-color:var(--muted)}
+.opt input:checked+span{background:var(--accent-soft);border-color:var(--accent);font-weight:600}
+.opt input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
+.opt.multi span::before{content:"";flex:0 0 14px;width:14px;height:14px;border:1.5px solid var(--muted);border-radius:3px}
+.opt.multi input:checked+span::before{border-color:var(--accent);background:var(--accent) center/10px no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 6.5l2.5 2.5L10 3.5' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")}
+.other{display:flex;gap:8px;align-items:center;max-width:420px}
+.other label{font-size:14px;color:var(--muted);flex:0 0 auto}
+
+.scale{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;max-width:400px}
+.scale .opt{display:flex}
+.scale .opt span{width:100%;justify-content:center;border-radius:8px;font:600 15px var(--font-mono);font-variant-numeric:tabular-nums}
+.scale-ends{display:flex;justify-content:space-between;gap:12px;max-width:400px;font-size:13px;color:var(--muted)}
+
+.flag-btn{justify-self:start;display:inline-flex;align-items:center;gap:6px;background:none;border:1px dashed var(--line);border-radius:999px;padding:6px 12px;min-height:34px;font-size:13px;color:var(--muted);cursor:pointer}
+.flag-btn:hover{border-color:var(--flag);color:var(--ink)}
+.flag-btn svg{width:14px;height:14px}
+.flag-btn[aria-pressed="true"]{background:var(--flag-soft);border:1px solid var(--flag);color:var(--ink);font-weight:600}
+.flag-note{display:grid;gap:6px;max-width:520px}
+.flag-note label{font-size:13px;color:var(--muted)}
+
+.sec-foot{margin-top:40px;padding-top:22px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between}
+
+/* Review */
+.rv{margin-top:40px;display:grid;gap:14px}
+.rv>h3{font-size:1.3rem;display:flex;align-items:center;gap:10px}
+.rv>p{color:var(--muted);max-width:38em}
+.pill{display:inline-flex;align-items:center;font:700 12px/1 var(--font-mono);padding:4px 8px;border-radius:999px;background:var(--surface);color:var(--muted)}
+.pill.flag{background:var(--flag-soft);color:var(--flag)}
+.cov{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.cov li{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"name num" "bar bar" "tags tags";gap:8px 14px;align-items:center;padding-block:14px;border-bottom:1px solid var(--line)}
+.cov-name{grid-area:name;justify-self:start;background:none;border:0;padding:0;font-weight:600;cursor:pointer;text-align:left}
+.cov-name:hover{color:var(--accent-ink)}
+.cov-bar{grid-area:bar;height:6px;background:var(--surface);border-radius:3px;overflow:hidden}
+.cov-bar i{display:block;height:100%;background:var(--accent)}
+.cov-bar.complete i{background:var(--ok)}
+.cov-num{grid-area:num;font:13px var(--font-mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.cov-tags{grid-area:tags;display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;font-size:13px;color:var(--muted)}
+.meter{display:inline-flex;align-items:center;gap:6px}
+.dots{display:inline-flex;gap:3px}
+.dots i{width:8px;height:8px;border-radius:50%;background:var(--line)}
+.dots i.on{background:var(--accent)}
+.dim-note{font-style:italic}
+@media (min-width:700px){
+	.cov li{grid-template-columns:150px minmax(0,1fr) 60px;grid-template-areas:"name bar num" ". tags tags"}
+}
+.todo{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.todo li{display:grid;gap:2px;padding:12px 14px;border-radius:8px;background:var(--flag-soft)}
+.todo .where{font:600 11px var(--font-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--flag)}
+.todo button{background:none;border:0;padding:0;text-align:left;font-weight:600;cursor:pointer;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:4px}
+.todo .note{font-size:14px;color:var(--muted)}
+.empty{padding:16px;border:1px dashed var(--line);border-radius:8px;color:var(--muted);font-size:15px}
+.share-block{display:grid;gap:10px;padding:18px;border:1px solid var(--line);border-radius:10px}
+.share-block h4{margin:0;font:600 15px var(--font-body)}
+.share-block .sub{font-size:14px;color:var(--muted)}
+.share-label{font:600 11px var(--font-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.fallback{display:grid;gap:8px;padding:14px;border-radius:8px;background:var(--surface)}
+.fallback textarea{font:13px/1.5 var(--font-mono);min-height:180px}
+.import{display:grid;gap:10px}
+.file-pick{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.file-pick input[type=file]{font-size:14px;max-width:100%;color:var(--muted)}
+.msg{font-size:14px;min-height:1.4em}
+.msg.ok{color:var(--ok)}
+.msg.err{color:var(--accent-ink)}
+
+.toast{position:fixed;left:16px;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));margin:0 auto;max-width:420px;z-index:20;background:var(--btn-bg);color:var(--btn-fg);border-radius:8px;padding:12px 16px;font-size:14px;font-weight:600;text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+	<symbol id="ic-flag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22v-7"/></symbol>
+	<symbol id="ic-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+	<symbol id="ic-save" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></symbol>
+	<symbol id="ic-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></symbol>
+</svg>
+
+<header class="top">
+	<div class="wrap">
+		<div class="brand">
+			<p class="eyebrow">selfdriven Agency</p>
+			<h1>Systems fact-find</h1>
+			<p class="lede">Plain-language questions about how accounting, tax, legal and communication work for you today. Answer what you know, flag what you don't.</p>
+		</div>
+		<div class="recbar">
+			<label for="rec-select">Current fact-find</label>
+			<select id="rec-select"></select>
+			<button class="btn ghost" type="button" id="btn-new"><svg aria-hidden="true"><use href="#ic-plus"/></svg>New</button>
+			<button class="btn ghost" type="button" id="btn-del">Delete</button>
+			<p class="status" id="save-status" role="status"></p>
+		</div>
+	</div>
+</header>
+
+<div class="wrap">
+	<div class="layout">
+		<nav class="rail" id="rail" aria-label="Sections"></nav>
+		<main class="main" id="main" tabindex="-1"></main>
+	</div>
+</div>
+
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+(function(){
+'use strict';
+
+const KEY = 'sd-agency-factfind-v1';
+const SCHEMA = 'selfdriven-agency.fact-find';
+
+const LENS = {
+	today:   ['Today', 'How it works right now.'],
+	info:    ['Information', 'What records exist and where they live.'],
+	oblig:   ['Obligations', 'Rules, deadlines and the people you answer to.'],
+	friction:['Friction', 'What is hard, slow or worrying.'],
+	outcome: ['Outcome', 'What good looks like, and how soon.']
+};
+
+const T  = (id, label, hint) => ({id, t:'text', label, hint});
+const L  = (id, label, hint) => ({id, t:'long', label, hint});
+const O  = (id, label, opts, hint) => ({id, t:'one', label, opts, hint});
+const M  = (id, label, opts, hint, other) => ({id, t:'many', label, opts, hint, other:!!other});
+const S  = (id, label, lo, hi, hint) => ({id, t:'scale', label, lo, hi, hint});
+const YN = (id, label, hint) => O(id, label, ['Yes', 'No'], hint);
+const URG = id => S(id, 'How urgent is this area for you?', 'Can wait', 'Urgent');
+
+const AREAS = ['Accounting', 'Tax compliance', 'Legal', 'Communication & brand'];
+const WHO = ['I do it myself', 'Someone in the team'];
+
+const SECTIONS = [
+{
+	id:'profile', nav:'About you', title:'About you', kicker:'Start here',
+	intro:'A few basics so we know who we are talking to and why.',
+	groups:[
+		{title:'Who is answering', qs:[
+			T('p.org', 'Organisation, project or client name'),
+			T('p.person', 'Your name and role', 'For example: Sam Lee, founder'),
+			T('p.contact', 'Best way to reach you for follow-up', 'An email address or phone number')
+		]},
+		{title:'Where you fit', qs:[
+			O('p.relation', 'How are you connected to the ecosystem?', ['Regenera Labs client', 'Ecosystem participant or member', 'Partner organisation', 'Internal team', 'Other']),
+			O('p.entity', 'What kind of entity is it?', ['Sole trader', 'Company', 'Trust', 'Partnership', 'Co-operative or association', 'Charity or foundation', 'Not set up yet']),
+			T('p.where', 'Where do you operate?', 'Countries or states, for example NSW and New Zealand'),
+			O('p.size', 'How many people are involved?', ['Just me', '2–5', '6–20', '21–50', 'More than 50']),
+			O('p.stage', 'What stage are you at?', ['Idea or planning', 'Started in the last year', 'Up and running', 'Growing quickly', 'Restructuring or winding down'])
+		]},
+		{title:'Why now', qs:[
+			M('p.areas', 'Which areas do you want help with?', AREAS, 'Pick any that apply. The others stay open if you want to add to them.'),
+			L('p.trigger', 'What prompted this right now?', 'A deadline, a new funder, growth, a problem that keeps coming back…')
+		]}
+	]
+},
+{
+	id:'acc', nav:'Accounting', title:'Accounting', kicker:'Area 1 of 4', area:'Accounting',
+	intro:'How money is tracked, recorded and reported. We are asking how it works, not for the numbers themselves.',
+	urg:'acc.priority', signal:{id:'acc.pain', label:'Friction'},
+	groups:[
+		{lens:'today', qs:[
+			O('acc.who', 'Who looks after the books today?', WHO.concat(['An external bookkeeper', 'An accountant', 'Nobody yet'])),
+			M('acc.tools', 'What do you use to keep track of money?', ['Xero', 'MYOB', 'QuickBooks', 'Spreadsheets', 'Paper or a folder of receipts', 'Nothing yet'], null, true),
+			O('acc.freq', 'How often are the books brought up to date?', ['Weekly or more', 'Monthly', 'Quarterly', 'Once a year', 'Whenever someone gets to it']),
+			M('acc.banks', 'Where does money come in and go out?', ['Business bank account', 'Personal account used for business', 'Card payments (e.g. Stripe, Square)', 'PayPal', 'Cash', 'Crypto or digital tokens'], null, true)
+		]},
+		{lens:'info', qs:[
+			M('acc.income', 'How do you earn or receive money?', ['Invoicing clients', 'Subscriptions or memberships', 'Product sales', 'Grants', 'Donations', 'Investment or loans', 'Token or digital-asset income'], null, true),
+			M('acc.pay', 'Who do you pay?', ['Employees', 'Contractors', 'Suppliers', 'Volunteer expenses', 'Nobody yet']),
+			L('acc.records', 'Where are receipts, invoices and statements kept?', 'For example: email inbox, Google Drive, a shoebox, inside Xero'),
+			M('acc.reports', 'Which money reports do you get?', ['Profit and loss', 'Balance sheet', 'Cash flow', 'Budget vs actual', 'Project or grant reports', 'None'])
+		]},
+		{lens:'oblig', qs:[
+			M('acc.audience', 'Who needs to see the numbers?', ['Founders or owners', 'Board', 'Investors', 'Funders or grant bodies', 'Members or community', 'The public']),
+			YN('acc.grantcond', 'Does any funding come with reporting conditions?'),
+			L('acc.approve', 'How are spending decisions approved?', 'Who can say yes, and is there a limit?')
+		]},
+		{lens:'friction', qs:[
+			S('acc.pain', 'How much does bookkeeping get in the way right now?', 'Barely', 'A lot'),
+			L('acc.headache', 'What is the biggest money headache?')
+		]},
+		{lens:'outcome', qs:[
+			L('acc.good', 'In 12 months, what would "sorted" look like?'),
+			URG('acc.priority')
+		]}
+	]
+},
+{
+	id:'tax', nav:'Tax', title:'Tax compliance', kicker:'Area 2 of 4', area:'Tax compliance',
+	intro:'What you are registered for, what you lodge and when, and anything overdue or unclear.',
+	urg:'tax.priority', signal:{id:'tax.worry', label:'Worry'},
+	groups:[
+		{lens:'today', qs:[
+			O('tax.who', 'Who prepares and lodges your tax?', WHO.concat(['A bookkeeper', 'A tax agent or accountant', 'Nobody yet'])),
+			M('tax.reg', 'Which tax registrations do you hold?', ['Business number (e.g. ABN)', 'GST / VAT', 'Employer withholding (e.g. PAYG)', 'Payroll tax', 'Fringe benefits tax', 'Charity tax concessions'], 'If you are unsure, tap Not sure below.', true),
+			L('tax.lodge', 'Which returns or statements do you lodge, and how often?', 'For example: quarterly BAS, annual company return')
+		]},
+		{lens:'info', qs:[
+			YN('tax.cross', 'Do you earn, pay or operate across borders?'),
+			YN('tax.digital', 'Do you receive, hold or pay with crypto or digital tokens?'),
+			S('tax.workers', 'How confident are you that contractors and employees are classified correctly?', 'Not at all', 'Very'),
+			O('tax.super', 'Are retirement contributions (e.g. superannuation) paid for people you pay?', ['Yes, on time', 'Sometimes late', 'No', 'Does not apply to us'])
+		]},
+		{lens:'oblig', qs:[
+			M('tax.incent', 'Which tax incentives or concessions do you claim, or might qualify for?', ['R&D tax incentive', 'Small business concessions', 'Charity or not-for-profit concessions', 'Grant tax treatment', 'Industry or export incentives', 'None that I know of']),
+			O('tax.missed', 'Were any lodgements or payments late in the last year?', ['None', 'One or two', 'Several']),
+			YN('tax.notices', 'Any open letters, notices or reviews from a tax authority?')
+		]},
+		{lens:'friction', qs:[
+			S('tax.worry', 'How much does tax worry you?', 'Not at all', 'Keeps me up'),
+			L('tax.headache', 'What is most confusing or stressful about tax?')
+		]},
+		{lens:'outcome', qs:[
+			L('tax.good', 'What would make tax feel easy?'),
+			URG('tax.priority')
+		]}
+	]
+},
+{
+	id:'leg', nav:'Legal', title:'Legal services', kicker:'Area 3 of 4', area:'Legal',
+	intro:'How the organisation is set up, the agreements you rely on, what you own, and the rules that apply to your work.',
+	urg:'leg.priority', signal:{id:'leg.worry', label:'Exposure'},
+	groups:[
+		{lens:'today', qs:[
+			O('leg.setup', 'Is the organisation formally set up?', ['Yes, registered and current', 'Registered, but paperwork is out of date', 'In progress', 'Not yet']),
+			O('leg.support', 'Where do you get legal help today?', ['In-house', 'A firm on retainer', 'A lawyer when needed', 'Templates from the internet', 'Nowhere yet']),
+			M('leg.govdocs', 'Which founding documents are in place?', ['Constitution or rules', 'Shareholder agreement', 'Trust deed', 'Partnership agreement', 'Founder or member agreement', 'Governance policies'])
+		]},
+		{lens:'info', qs:[
+			M('leg.contracts', 'Which agreements do you use regularly?', ['Client or service agreements', 'Contractor agreements', 'Employment contracts', 'NDAs', 'Partnership or MOU', 'Licensing', 'Website terms', 'Privacy policy'], null, true),
+			L('leg.store', 'Where are signed agreements kept, and who is allowed to sign?'),
+			M('leg.data', 'What personal information do you collect about people?', ['Names and contact details', 'Payment details', 'Identity documents', 'Health information', 'Information about children', 'Location data', 'None'])
+		]},
+		{lens:'oblig', qs:[
+			L('leg.ip', 'What do you create that is valuable?', 'Brand, software, content, methods, data'),
+			M('leg.ipreg', 'What is protected so far?', ['Registered trademark', 'Domain names', 'Patent', 'Code or content licences', 'Nothing yet']),
+			YN('leg.ipassign', 'Do founders and contractors sign their work over to the organisation in writing?'),
+			M('leg.regulated', 'Does any of your work touch regulated areas?', ['Financial services or credit', 'Digital assets', 'Insurance', 'Health', 'Fundraising', 'Education or childcare', 'Property', 'None that I know of'], null, true)
+		]},
+		{lens:'friction', qs:[
+			YN('leg.dispute', 'Any current or possible disputes?', 'No details needed here. We will ask privately if it matters.'),
+			S('leg.worry', 'How exposed do you feel legally?', 'Covered', 'Exposed'),
+			L('leg.headache', 'What legal question keeps coming up?')
+		]},
+		{lens:'outcome', qs:[
+			L('leg.good', 'What would "legally sorted" look like?'),
+			URG('leg.priority')
+		]}
+	]
+},
+{
+	id:'com', nav:'Communication', title:'Communication', kicker:'Area 4 of 4', area:'Communication & brand',
+	intro:'Two sides: how people inside the ecosystem stay informed and can take part, and how you show up to everyone else through marketing and brand.',
+	urg:'com.priority', signal:{id:'com.informed', label:'In the loop', invert:true},
+	groups:[
+		{lens:'today', qs:[
+			O('com.owner', 'Who looks after communication today?', ['Me', 'Someone in the team', 'An agency or freelancer', 'Shared, but nobody owns it', 'Nobody yet']),
+			M('com.channels', 'Which channels do you use?', ['Email', 'Newsletter', 'Slack or Teams', 'WhatsApp or Signal', 'Telegram or Discord', 'Website', 'LinkedIn', 'Instagram', 'X', 'Events or meetups'], null, true),
+			M('com.audiences', 'Who do you need to talk to?', ['Team', 'Contractors', 'Board', 'Investors or funders', 'Members or community', 'Clients', 'Partners', 'Government or regulators', 'General public'], null, true)
+		]},
+		{lens:'info', title:'Inside the ecosystem', desc:'Transparency for the people who take part.', qs:[
+			M('com.visible', 'What should participants be able to see?', ['Plans and roadmap', 'Decisions and why they were made', 'Meeting notes', 'Financial summaries', 'Contributions and rewards', 'Policies and rules', 'Who is responsible for what']),
+			L('com.decisions', 'How are decisions recorded and shared today?'),
+			O('com.cadence', 'How often do participants hear from you?', ['Weekly', 'Fortnightly', 'Monthly', 'Quarterly', 'Only when something happens']),
+			S('com.informed', 'How well-informed do people feel?', 'In the dark', 'Fully in the loop')
+		]},
+		{lens:'info', title:'Brand and market', desc:'How you show up to everyone else.', qs:[
+			L('com.oneliner', 'In one sentence: what do you do, and for whom?'),
+			M('com.assets', 'Which brand basics exist?', ['Name', 'Logo', 'Colour and font guide', 'Website', 'Tone of voice', 'Pitch deck', 'Case studies or stories', 'Photos or video']),
+			S('com.consistent', 'How consistent is your brand across channels?', 'All over the place', 'Rock solid')
+		]},
+		{lens:'oblig', qs:[
+			T('com.approve', 'Who approves what goes out publicly?'),
+			L('com.disclose', 'Is there anything you must share, or have promised to?', 'For example: member reports, grant acknowledgements, impact reports, required disclosures')
+		]},
+		{lens:'friction', qs:[
+			L('com.lost', 'Where does information get lost or misunderstood?'),
+			L('com.misread', 'What do people get wrong about you?')
+		]},
+		{lens:'outcome', qs:[
+			L('com.say', 'What do you want people to say about you?'),
+			L('com.moments', 'Any launches, events or announcements coming up?', 'Rough dates are fine'),
+			URG('com.priority')
+		]}
+	]
+},
+{
+	id:'wrap', nav:'Wrap-up', title:'Wrap-up', kicker:'Last step',
+	intro:'Pull it together so we know where to start.',
+	groups:[
+		{title:'Bringing it together', qs:[
+			L('w.top', 'What are your top three priorities across everything?', 'In order. One line each is fine.'),
+			M('w.docs', 'What could you share to help us understand?', ['Recent financial statements', 'Tax returns or BAS', 'Founding documents', 'Key contracts', 'Brand guide', 'Team or org chart', 'Recent newsletters or reports'], 'Do not attach anything here. Just tell us what exists.', true),
+			O('w.call', 'When suits a follow-up conversation?', ['This week', 'In the next two weeks', 'This month', 'Later']),
+			L('w.more', 'Anything else we should know?')
+		]}
+	]
+},
+{ id:'review', nav:'Review & share', review:true }
+];
+
+/* Index */
+const SEC = {}; const QMAP = {}; const ALLQ = [];
+SECTIONS.forEach(s => {
+	SEC[s.id] = s;
+	(s.groups || []).forEach(g => g.qs.forEach(q => {
+		const entry = {q, sec:s, lens:g.lens || null, group:g};
+		QMAP[q.id] = entry; ALLQ.push(entry);
+	}));
+});
+const FORM_SECTIONS = SECTIONS.filter(s => !s.review);
+const domId = id => id.replace(/\./g, '-');
+
+/* Helpers */
+function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function uid(){ return 'ff-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2,7); }
+function nowISO(){ return new Date().toISOString(); }
+function fmtDate(iso){ try { return new Date(iso).toLocaleDateString('en-AU', {day:'numeric', month:'short', year:'numeric'}); } catch(e){ return ''; } }
+function fmtTime(d){ try { return d.toLocaleTimeString('en-AU', {hour:'numeric', minute:'2-digit'}); } catch(e){ return ''; } }
+function blank(){ const t = nowISO(); return {id:uid(), created:t, updated:t, answers:{}, flags:{}, notes:{}}; }
+function recTitle(r){ return ((r.answers['p.org'] || '') + '').trim() || 'Untitled fact-find'; }
+function slug(s){ return (s || 'fact-find').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40) || 'fact-find'; }
+function today(){ const d = new Date(), p = n => String(n).padStart(2, '0'); return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()); }
+
+function isAnswered(q, r){
+	const v = r.answers[q.id];
+	if (q.t === 'many') return (Array.isArray(v) && v.length > 0) || !!((r.answers[q.id + '.other'] || '') + '').trim();
+	if (q.t === 'scale') return typeof v === 'number';
+	return typeof v === 'string' && v.trim() !== '';
+}
+function fmtAnswer(q, r){
+	const v = r.answers[q.id];
+	if (q.t === 'many') {
+		const parts = Array.isArray(v) ? v.slice() : [];
+		const other = ((r.answers[q.id + '.other'] || '') + '').trim();
+		if (other) parts.push('Other: ' + other);
+		return parts.join('; ');
+	}
+	if (q.t === 'scale') return typeof v === 'number' ? v + ' of 5 (1 = ' + q.lo + ', 5 = ' + q.hi + ')' : '';
+	return typeof v === 'string' ? v.trim() : '';
+}
+function stats(s, r){
+	let total = 0, answered = 0, flagged = 0;
+	(s.groups || []).forEach(g => g.qs.forEach(q => { total++; if (isAnswered(q, r)) answered++; if (r.flags[q.id]) flagged++; }));
+	return {total, answered, flagged};
+}
+function flaggedList(r){ return ALLQ.filter(e => r.flags[e.q.id]); }
+function areaSkipped(s, r){
+	const a = r.answers['p.areas'];
+	return !!(s.area && Array.isArray(a) && a.length && a.indexOf(s.area) === -1);
+}
+
+/* State */
+let storageOK = true;
+let lastSaved = null;
+let state = load();
+
+function load(){
+	try {
+		const raw = localStorage.getItem(KEY);
+		if (raw) {
+			const s = JSON.parse(raw);
+			if (s && s.records && typeof s.records === 'object' && Object.keys(s.records).length) {
+				Object.keys(s.records).forEach(k => { const r = s.records[k]; r.answers = r.answers || {}; r.flags = r.flags || {}; r.notes = r.notes || {}; });
+				if (!s.records[s.current]) s.current = Object.keys(s.records)[0];
+				if (!SEC[s.section]) s.section = 'profile';
+				return s;
+			}
+		}
+	} catch (e) { storageOK = false; }
+	const r = blank();
+	return {v:1, current:r.id, section:'profile', records:{[r.id]:r}};
+}
+function persist(){
+	try { localStorage.setItem(KEY, JSON.stringify(state)); storageOK = true; lastSaved = new Date(); }
+	catch (e) { storageOK = false; }
+	setStatus();
+}
+let saveTimer = null;
+function scheduleSave(){ clearTimeout(saveTimer); saveTimer = setTimeout(persist, 350); }
+function cur(){ return state.records[state.current]; }
+
+/* Elements */
+const $ = id => document.getElementById(id);
+const rail = $('rail'), main = $('main'), recSelect = $('rec-select'), statusEl = $('save-status');
+
+function setStatus(){
+	if (!storageOK) {
+		statusEl.textContent = 'Not saving: this browser is blocking storage. Use Review & share to copy your answers.';
+		statusEl.className = 'status warn';
+	} else {
+		statusEl.textContent = lastSaved ? 'Saved in this browser at ' + fmtTime(lastSaved) : 'Saves automatically in this browser';
+		statusEl.className = 'status';
+	}
+}
+
+/* Toast */
+let toastTimer = null;
+function toast(msg){
+	const el = $('toast'); el.textContent = msg; el.hidden = false;
+	clearTimeout(toastTimer); toastTimer = setTimeout(() => { el.hidden = true; }, 2600);
+}
+
+/* Record picker */
+function renderRecords(){
+	const ids = Object.keys(state.records).sort((a, b) => (state.records[b].updated || '').localeCompare(state.records[a].updated || ''));
+	recSelect.innerHTML = ids.map(id => {
+		const r = state.records[id];
+		return '<option value="' + esc(id) + '"' + (id === state.current ? ' selected' : '') + '>' + esc(recTitle(r)) + (r.example ? ' (example)' : '') + ' · ' + esc(fmtDate(r.updated)) + '</option>';
+	}).join('');
+}
+
+/* Rail */
+function buildRail(){
+	rail.innerHTML = SECTIONS.map(s => {
+		if (s.review) return '<button type="button" class="nav-btn review" id="nav-review" data-go="review"><span class="nav-name">Review &amp; share</span><span class="nav-meta"><span class="nav-flag" hidden></span></span></button>';
+		return '<button type="button" class="nav-btn" id="nav-' + s.id + '" data-go="' + s.id + '"><span class="nav-name">' + esc(s.nav) + '</span><span class="nav-meta"><span class="nav-flag" hidden></span><span class="nav-count"></span></span><span class="nav-bar"><i></i></span></button>';
+	}).join('') + '<p class="rail-note">Answers save in this browser only. Use Review &amp; share to send them.</p>';
+}
+function refreshNav(){
+	const r = cur();
+	let totalFlags = 0;
+	FORM_SECTIONS.forEach(s => {
+		const st = stats(s, r); totalFlags += st.flagged;
+		const b = $('nav-' + s.id);
+		b.querySelector('.nav-count').textContent = st.answered + '/' + st.total;
+		const f = b.querySelector('.nav-flag'); f.hidden = !st.flagged; f.textContent = st.flagged; f.title = st.flagged + ' to check';
+		b.querySelector('.nav-bar i').style.width = Math.round(st.answered / st.total * 100) + '%';
+		b.classList.toggle('complete', st.answered === st.total);
+		b.classList.toggle('dim', areaSkipped(s, r));
+		if (state.section === s.id) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
+		b.setAttribute('aria-label', s.nav + ', ' + st.answered + ' of ' + st.total + ' answered' + (st.flagged ? ', ' + st.flagged + ' to check' : ''));
+	});
+	const rv = $('nav-review'); const rf = rv.querySelector('.nav-flag');
+	rf.hidden = !totalFlags; rf.textContent = totalFlags; rf.title = totalFlags + ' to check';
+	if (state.section === 'review') rv.setAttribute('aria-current', 'step'); else rv.removeAttribute('aria-current');
+	const active = rail.querySelector('[aria-current]');
+	if (active && rail.scrollWidth > rail.clientWidth) {
+		const l = active.offsetLeft, w = active.offsetWidth;
+		if (l < rail.scrollLeft || l + w > rail.scrollLeft + rail.clientWidth) rail.scrollLeft = Math.max(0, l - 20);
+	}
+}
+
+/* Question rendering */
+function qHTML(q, r){
+	const d = domId(q.id), v = r.answers[q.id], flagged = !!r.flags[q.id];
+	const cls = 'q' + (isAnswered(q, r) ? ' answered' : '') + (flagged ? ' flagged' : '');
+	let label, body = '';
+	if (q.t === 'text' || q.t === 'long') {
+		label = '<label class="q-label" for="' + d + '">' + esc(q.label) + '</label>';
+		body = q.t === 'text'
+			? '<input type="text" id="' + d + '" data-q="' + q.id + '" value="' + esc(v || '') + '" autocomplete="off">'
+			: '<textarea id="' + d + '" data-q="' + q.id + '" rows="3">' + esc(v || '') + '</textarea>';
+	} else {
+		label = '<p class="q-label" id="l-' + d + '">' + esc(q.label) + '</p>';
+		if (q.t === 'one') {
+			body = '<div class="opts" role="radiogroup" aria-labelledby="l-' + d + '">' + q.opts.map((o, i) =>
+				'<label class="opt"><input type="radio" name="' + d + '" id="' + d + '__' + i + '" data-q="' + q.id + '" value="' + esc(o) + '"' + (v === o ? ' checked' : '') + '><span>' + esc(o) + '</span></label>'
+			).join('') + '</div>';
+		} else if (q.t === 'many') {
+			const arr = Array.isArray(v) ? v : [];
+			body = '<div class="opts" role="group" aria-labelledby="l-' + d + '">' + q.opts.map((o, i) =>
+				'<label class="opt multi"><input type="checkbox" id="' + d + '__' + i + '" data-q="' + q.id + '" value="' + esc(o) + '"' + (arr.indexOf(o) > -1 ? ' checked' : '') + '><span>' + esc(o) + '</span></label>'
+			).join('') + '</div>';
+			if (q.other) body += '<div class="other"><label for="' + d + '__other">Other</label><input type="text" id="' + d + '__other" data-other="' + q.id + '" value="' + esc(r.answers[q.id + '.other'] || '') + '" autocomplete="off"></div>';
+		} else if (q.t === 'scale') {
+			body = '<div class="scale" role="radiogroup" aria-labelledby="l-' + d + '">' + [1,2,3,4,5].map(n =>
+				'<label class="opt"><input type="radio" name="' + d + '" id="' + d + '__' + n + '" data-q="' + q.id + '" value="' + n + '"' + (v === n ? ' checked' : '') + ' aria-label="' + n + (n === 1 ? ', ' + esc(q.lo) : n === 5 ? ', ' + esc(q.hi) : '') + '"><span>' + n + '</span></label>'
+			).join('') + '</div><div class="scale-ends" aria-hidden="true"><span>1 · ' + esc(q.lo) + '</span><span>5 · ' + esc(q.hi) + '</span></div>';
+		}
+	}
+	const hint = q.hint ? '<p class="q-hint">' + esc(q.hint) + '</p>' : '';
+	const foot = '<div class="q-foot"><button type="button" class="flag-btn" data-flag="' + q.id + '" aria-pressed="' + flagged + '"><svg aria-hidden="true"><use href="#ic-flag"/></svg>Not sure</button>' +
+		'<div class="flag-note"' + (flagged ? '' : ' hidden') + '><label for="n-' + d + '">What needs checking, and who would know?</label><input type="text" id="n-' + d + '" data-note="' + q.id + '" value="' + esc(r.notes[q.id] || '') + '" autocomplete="off"></div></div>';
+	return '<div class="' + cls + '" id="q-' + d + '">' + label + hint + '<div class="q-body">' + body + '</div>' + foot + '</div>';
+}
+
+function sectionHTML(s){
+	const r = cur(), st = stats(s, r);
+	const idx = SECTIONS.indexOf(s), prev = SECTIONS[idx - 1], next = SECTIONS[idx + 1];
+	let h = '<header class="sec-head"><p class="eyebrow">' + esc(s.kicker) + '</p><h2>' + esc(s.title) + '</h2><p class="intro">' + esc(s.intro) + '</p><p class="sec-meta" id="sec-meta">' + st.answered + ' of ' + st.total + ' answered' + (st.flagged ? ' · ' + st.flagged + ' to check' : '') + '</p></header>';
+	if (r.example) h += '<div class="banner example"><p>This is a made-up example that shows what a finished fact-find looks like. Changes here only affect the example.</p><button type="button" class="btn" data-act="new">Start my own</button></div>';
+	if (areaSkipped(s, r)) h += '<div class="banner"><p>You did not pick ' + esc(s.area) + ' on the first page. Add anything useful, or skip ahead.</p><button type="button" class="btn ghost" data-go="' + esc(next.id) + '">Skip to ' + esc(next.nav) + '</button></div>';
+	if (s.id === 'profile') {
+		h += '<ol class="steps"><li><div><b>Answer what you know.</b><span>Plain answers are perfect. Nothing here is a test, and every question is optional.</span></div></li>' +
+			'<li><div><b>Flag what you are unsure of.</b><span>Tap Not sure under a question and note who might know.</span></div></li>' +
+			'<li><div><b>Share it with us.</b><span>Go to Review &amp; share to copy or save your answers, then send them by email or message.</span></div></li></ol>' +
+			'<p class="privacy">Please do not type passwords, bank or card numbers, or tax file numbers. Tell us where things are kept instead.</p>';
+		if (!r.example) h += '<p style="margin-top:14px;font-size:15px">Want to see how it looks filled in? <button type="button" class="linkish" data-act="example">Open the example</button></p>';
+	}
+	s.groups.forEach(g => {
+		const lens = g.lens ? LENS[g.lens] : null;
+		const title = g.title || (lens ? lens[0] : '');
+		const desc = g.desc || (lens && !g.title ? lens[1] : '');
+		h += '<section class="group"><div class="group-head">' + (lens ? '<span class="lens">' + esc(lens[0]) + '</span>' : '') +
+			(lens && !g.title ? '<h3>' + esc(lens[1]) + '</h3>' : '<h3>' + esc(title) + '</h3>' + (desc ? '<p>' + esc(desc) + '</p>' : '')) +
+			'</div>' + g.qs.map(q => qHTML(q, r)).join('') + '</section>';
+	});
+	h += '<div class="sec-foot">' + (prev ? '<button type="button" class="btn ghost" data-go="' + prev.id + '">Back</button>' : '<span></span>') +
+		(next ? '<button type="button" class="btn" data-go="' + next.id + '">Next: ' + esc(next.nav) + '</button>' : '') + '</div>';
+	return h;
+}
+
+/* Review */
+let dlState = 'pending', dl = null;
+function dotsHTML(v, label){
+	if (typeof v !== 'number') return '<span class="meter">' + esc(label) + ' <span class="dim-note">not rated</span></span>';
+	let d = ''; for (let i = 1; i <= 5; i++) d += '<i' + (i <= v ? ' class="on"' : '') + '></i>';
+	return '<span class="meter">' + esc(label) + ' <span class="dots" role="img" aria-label="' + v + ' of 5">' + d + '</span></span>';
+}
+function reviewHTML(){
+	const r = cur(), flags = flaggedList(r), count = Object.keys(state.records).length;
+	let h = '<header class="sec-head"><p class="eyebrow">Review &amp; share</p><h2>' + esc(recTitle(r)) + '</h2><p class="intro">Check what is covered and what still needs checking, then send it across.</p><p class="sec-meta">Started ' + esc(fmtDate(r.created)) + ' · Updated ' + esc(fmtDate(r.updated)) + '</p></header>';
+	if (r.example) h += '<div class="banner example"><p>You are looking at the example. Start your own to share real answers.</p><button type="button" class="btn" data-act="new">Start my own</button></div>';
+
+	h += '<section class="rv"><h3>Coverage</h3><ul class="cov">' + FORM_SECTIONS.map(s => {
+		const st = stats(s, r), pct = Math.round(st.answered / st.total * 100);
+		let tags = '';
+		if (st.flagged) tags += '<span class="pill flag">' + st.flagged + ' to check</span>';
+		if (s.urg) tags += dotsHTML(r.answers[s.urg], 'Urgency');
+		if (s.signal) tags += dotsHTML(r.answers[s.signal.id], s.signal.label);
+		if (areaSkipped(s, r)) tags += '<span class="dim-note">Not selected</span>';
+		return '<li><button type="button" class="cov-name" data-go="' + s.id + '">' + esc(s.title) + '</button><span class="cov-bar' + (pct === 100 ? ' complete' : '') + '"><i style="width:' + pct + '%"></i></span><span class="cov-num">' + st.answered + '/' + st.total + '</span><span class="cov-tags">' + tags + '</span></li>';
+	}).join('') + '</ul></section>';
+
+	h += '<section class="rv"><h3>To check <span class="pill' + (flags.length ? ' flag' : '') + '">' + flags.length + '</span></h3>';
+	h += flags.length
+		? '<ul class="todo">' + flags.map(e => '<li><span class="where">' + esc(e.sec.nav) + '</span><button type="button" data-jump="' + e.q.id + '">' + esc(e.q.label) + '</button>' + (r.notes[e.q.id] ? '<span class="note">' + esc(r.notes[e.q.id]) + '</span>' : '') + '</li>').join('') + '</ul>'
+		: '<p class="empty">Nothing flagged. If you were unsure about something, tap Not sure under the question so it shows up here.</p>';
+	h += '</section>';
+
+	const saveBtns = (scope) => (dlState === 'ready' || dlState === 'local')
+		? '<p class="share-label">Save as a file</p><div class="btn-row">' +
+			(scope === 'one' ? '<button type="button" class="btn ghost" data-act="save-md"><svg aria-hidden="true"><use href="#ic-save"/></svg>Summary (.md)</button>' : '') +
+			'<button type="button" class="btn ghost" data-act="save-csv-' + scope + '"><svg aria-hidden="true"><use href="#ic-save"/></svg>Spreadsheet (.csv)</button>' +
+			'<button type="button" class="btn ghost" data-act="save-json-' + scope + '"><svg aria-hidden="true"><use href="#ic-save"/></svg>Data (.json)</button></div>'
+		: dlState === 'none' ? '<p class="sub">Saving files is not available in this view. Copy instead and paste into an email or message.</p>' : '';
+
+	h += '<section class="rv"><h3>Share</h3><p>The summary is for people to read. The data copy lets us load your answers straight into the system.</p>' +
+		'<div class="share-block"><h4>This fact-find</h4><div class="btn-row"><button type="button" class="btn" data-act="copy-md"><svg aria-hidden="true"><use href="#ic-copy"/></svg>Copy summary</button><button type="button" class="btn ghost" data-act="copy-json-one"><svg aria-hidden="true"><use href="#ic-copy"/></svg>Copy data</button></div>' + saveBtns('one') + '</div>' +
+		'<div class="share-block"><h4>Everything in this browser</h4><p class="sub">' + count + ' fact-find' + (count === 1 ? '' : 's') + ' saved here. Handy for collecting several clients into one file.</p><div class="btn-row"><button type="button" class="btn ghost" data-act="copy-json-all"><svg aria-hidden="true"><use href="#ic-copy"/></svg>Copy all data</button></div>' + saveBtns('all') + '</div>' +
+		'<div class="fallback" id="copy-fallback" hidden><p id="copy-fallback-msg">Copying is blocked here. The text below is selected; use your device\'s copy command.</p><textarea id="copy-fallback-text" readonly aria-label="Text to copy"></textarea></div>' +
+		'</section>';
+
+	h += '<section class="rv"><h3>Open a shared fact-find</h3><p>Load a data file someone sent you, or paste data they copied. It is added to this browser alongside your own.</p>' +
+		'<div class="import"><div class="file-pick"><label class="share-label" for="imp-file">Data file</label><input type="file" id="imp-file" accept=".json,application/json"></div>' +
+		'<label class="share-label" for="imp-paste">Or paste data</label><textarea id="imp-paste" rows="4" placeholder="Paste copied data here"></textarea>' +
+		'<div class="btn-row"><button type="button" class="btn ghost" data-act="import-paste">Load pasted data</button></div><p class="msg" id="imp-msg" role="status"></p></div></section>';
+
+	h += '<div class="sec-foot"><button type="button" class="btn ghost" data-go="wrap">Back</button><span></span></div>';
+	return h;
+}
+
+/* Exports */
+function exportRec(r){
+	return {
+		id:r.id, title:recTitle(r), created:r.created, updated:r.updated, example:!!r.example,
+		responses: ALLQ.map(e => ({section:e.sec.title, lens:e.lens ? LENS[e.lens][0] : null, id:e.q.id, question:e.q.label, answer:fmtAnswer(e.q, r) || null, notSure:!!r.flags[e.q.id], note:r.notes[e.q.id] || null})),
+		answers:r.answers, flags:r.flags, notes:r.notes
+	};
+}
+function toJSON(recs){ return JSON.stringify({schema:SCHEMA, version:1, exported:nowISO(), records:recs.map(exportRec)}, null, 2); }
+function csvCell(v){ v = v == null ? '' : String(v); return /[",\n\r]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
+function toCSV(recs){
+	const rows = [['fact_find_id','organisation','section','lens','question_id','question','answer','not_sure','note','updated']];
+	recs.forEach(r => ALLQ.forEach(e => rows.push([r.id, recTitle(r), e.sec.title, e.lens ? LENS[e.lens][0] : '', e.q.id, e.q.label, fmtAnswer(e.q, r), r.flags[e.q.id] ? 'yes' : '', r.notes[e.q.id] || '', r.updated])));
+	return rows.map(row => row.map(csvCell).join(',')).join('\r\n');
+}
+function toMarkdown(r){
+	const out = [], flags = flaggedList(r), by = (r.answers['p.person'] || '').trim();
+	out.push('# Systems fact-find: ' + recTitle(r), '');
+	out.push((by ? 'Prepared by ' + by + ' · ' : '') + 'Updated ' + fmtDate(r.updated) + (r.example ? ' · Example data' : ''));
+	out.push('', '## To check (' + flags.length + ')', '');
+	if (!flags.length) out.push('Nothing flagged.');
+	flags.forEach(e => out.push('- **' + e.sec.nav + ':** ' + e.q.label + (r.notes[e.q.id] ? ': ' + r.notes[e.q.id] : '')));
+	FORM_SECTIONS.forEach(s => {
+		const st = stats(s, r);
+		out.push('', '## ' + s.title + ' (' + st.answered + '/' + st.total + ')');
+		s.groups.forEach(g => {
+			const qs = g.qs.filter(q => isAnswered(q, r) || r.flags[q.id]);
+			if (!qs.length) return;
+			out.push('', '### ' + (g.title || (g.lens ? LENS[g.lens][0] : '')));
+			qs.forEach(q => {
+				const a = fmtAnswer(q, r);
+				out.push('', '**' + q.label + '**' + (r.flags[q.id] ? ' _(not sure)_' : ''));
+				out.push(a ? a : '_No answer yet_');
+			});
+		});
+		if (st.answered < st.total) out.push('', '_Not answered: ' + (st.total - st.answered) + '_');
+	});
+	return out.join('\n') + '\n';
+}
+
+function showFallback(text){
+	const box = $('copy-fallback'), ta = $('copy-fallback-text');
+	if (!box) return;
+	ta.value = text; box.hidden = false; ta.focus(); ta.select();
+	box.scrollIntoView({block:'nearest'});
+}
+function copyText(text, label){
+	const fb = $('copy-fallback'); if (fb) fb.hidden = true;
+	try {
+		if (!navigator.clipboard || !navigator.clipboard.writeText) throw new Error('no clipboard');
+		navigator.clipboard.writeText(text).then(() => toast(label + ' copied'), () => showFallback(text));
+	} catch (e) { showFallback(text); }
+}
+function saveLocal(filename, data){
+	try {
+		const ext = filename.split('.').pop();
+		const type = ext === 'csv' ? 'text/csv' : ext === 'json' ? 'application/json' : 'text/markdown';
+		const url = URL.createObjectURL(new Blob([data], {type: type + ';charset=utf-8'}));
+		const a = document.createElement('a'); a.href = url; a.download = filename;
+		document.body.appendChild(a); a.click(); a.remove();
+		setTimeout(() => URL.revokeObjectURL(url), 4000);
+		toast('File saved');
+	} catch (e) { toast('That file could not be saved. Use Copy instead.'); }
+}
+function saveFile(filename, data){
+	if (dlState === 'local') { saveLocal(filename, data); return; }
+	if (!dl) { toast('Saving files is not available here. Use Copy instead.'); return; }
+	dl.save({filename, data}).then(res => { if (res && res.status === 'saved') toast('File saved'); }).catch(err => {
+		const code = err && err.code;
+		if (code === 'declined') return;
+		if (code === 'rate_limited') { toast('A save is already waiting for you to confirm.'); return; }
+		if (['unavailable','not_granted','capability_disabled','capability_removed','extension_not_enabled'].indexOf(code) > -1) { dl = null; dlState = 'none'; if (state.section === 'review') render(); }
+		toast('That file could not be saved. Use Copy instead.');
+	});
+}
+
+/* Import */
+function cleanMap(obj, kind){
+	const out = {};
+	if (!obj || typeof obj !== 'object') return out;
+	Object.keys(obj).forEach(k => {
+		const base = k.endsWith('.other') ? k.slice(0, -6) : k;
+		const e = QMAP[base]; if (!e) return;
+		const v = obj[k];
+		if (kind === 'flags') { if (v === true) out[k] = true; return; }
+		if (kind === 'notes') { if (typeof v === 'string' && v.trim()) out[k] = v.slice(0, 2000); return; }
+		if (k !== base) { if (typeof v === 'string') out[k] = v.slice(0, 500); return; }
+		if (e.q.t === 'many') { if (Array.isArray(v)) { const ok = v.filter(x => typeof x === 'string' && e.q.opts.indexOf(x) > -1); if (ok.length) out[k] = ok; } }
+		else if (e.q.t === 'scale') { if (typeof v === 'number' && v >= 1 && v <= 5) out[k] = Math.round(v); }
+		else if (e.q.t === 'one') { if (typeof v === 'string' && e.q.opts.indexOf(v) > -1) out[k] = v; }
+		else if (typeof v === 'string') out[k] = v.slice(0, 5000);
+	});
+	return out;
+}
+function importText(txt){
+	const say = (t, ok) => { const msg = $('imp-msg'); if (msg) { msg.textContent = t; msg.className = 'msg ' + (ok ? 'ok' : 'err'); } };
+	let data;
+	try { data = JSON.parse(txt); } catch (e) { say('That does not look like fact-find data. Check you copied all of it, starting with {.'); return; }
+	let recs = null;
+	if (data && data.schema === SCHEMA && Array.isArray(data.records)) recs = data.records;
+	else if (data && typeof data.answers === 'object') recs = [data];
+	if (!recs || !recs.length) { say('This is not a fact-find export.'); return; }
+	let added = 0, updated = 0, skipped = 0, last = null;
+	recs.forEach(x => {
+		if (!x || typeof x.answers !== 'object') { skipped++; return; }
+		let id = typeof x.id === 'string' && /^[\w-]{3,64}$/.test(x.id) ? x.id : uid();
+		const incoming = {id, created:typeof x.created === 'string' ? x.created : nowISO(), updated:typeof x.updated === 'string' ? x.updated : nowISO(), answers:cleanMap(x.answers, 'answers'), flags:cleanMap(x.flags, 'flags'), notes:cleanMap(x.notes, 'notes')};
+		if (x.example === true) incoming.example = true;
+		const existing = state.records[id];
+		if (existing) {
+			if ((incoming.updated || '') > (existing.updated || '')) { state.records[id] = incoming; updated++; last = id; }
+			else { skipped++; last = last || id; }
+		} else { state.records[id] = incoming; added++; last = id; }
+	});
+	if (last) state.current = last;
+	persist(); renderRecords(); render();
+	const parts = [];
+	if (added) parts.push(added + ' added');
+	if (updated) parts.push(updated + ' updated');
+	if (skipped) parts.push(skipped + ' already up to date');
+	say('Loaded: ' + (parts.join(', ') || 'nothing new') + '. Now showing ' + recTitle(cur()) + '.', true);
+}
+
+/* Example */
+function makeExample(){
+	const r = blank(); r.example = true;
+	Object.assign(r.answers, {
+		'p.org':'Riverbend Growers Co-op', 'p.person':'Alex Moreno, coordinator', 'p.contact':'alex@riverbend.example',
+		'p.relation':'Regenera Labs client', 'p.entity':'Co-operative or association', 'p.where':'Northern Rivers, NSW',
+		'p.size':'6–20', 'p.stage':'Up and running', 'p.areas':['Accounting', 'Tax compliance', 'Communication & brand'],
+		'p.trigger':'We received our first state grant and must report on it by June. Members also keep asking where the money goes.',
+		'acc.who':'I do it myself', 'acc.tools':['Spreadsheets'], 'acc.freq':'Whenever someone gets to it',
+		'acc.banks':['Business bank account', 'Card payments (e.g. Stripe, Square)', 'Cash'],
+		'acc.income':['Subscriptions or memberships', 'Product sales', 'Grants'], 'acc.pay':['Contractors', 'Suppliers'],
+		'acc.records':'Receipts in a shared Google Drive folder, invoices in Gmail, market-day cash in a notebook.',
+		'acc.reports':['None'], 'acc.audience':['Board', 'Funders or grant bodies', 'Members or community'], 'acc.grantcond':'Yes',
+		'acc.pain':4, 'acc.headache':'Matching market-day cash to the bank account at the end of each quarter.',
+		'acc.good':'Books up to date monthly, a grant report we can produce in an afternoon, and a one-page summary for members.', 'acc.priority':5,
+		'tax.who':'A tax agent or accountant', 'tax.reg':['Business number (e.g. ABN)', 'GST / VAT'],
+		'tax.lodge':'Quarterly BAS through our accountant.', 'tax.cross':'No', 'tax.digital':'No', 'tax.workers':2,
+		'tax.missed':'One or two', 'tax.worry':3, 'tax.priority':3,
+		'com.owner':'Shared, but nobody owns it', 'com.channels':['Email', 'WhatsApp or Signal', 'Instagram', 'Events or meetups'],
+		'com.audiences':['Members or community', 'Investors or funders', 'General public'],
+		'com.visible':['Decisions and why they were made', 'Financial summaries'], 'com.cadence':'Only when something happens', 'com.informed':2,
+		'com.oneliner':'We help small growers in the Northern Rivers sell locally and share equipment.', 'com.assets':['Name', 'Logo'], 'com.consistent':2,
+		'com.lost':'Decisions made in the WhatsApp group never reach members who are not in it.', 'com.priority':4,
+		'w.top':'1. Grant reporting by June\n2. Monthly books\n3. A regular members update', 'w.docs':['Recent financial statements', 'Founding documents'], 'w.call':'In the next two weeks'
+	});
+	r.flags = {'tax.lodge':true, 'tax.super':true};
+	r.notes = {'tax.lodge':'Ask our accountant which annual return we lodge.', 'tax.super':'Check whether regular contractors count as employees for super.'};
+	return r;
+}
+
+/* Rendering and navigation */
+function render(){
+	const s = SEC[state.section] || SEC.profile;
+	main.innerHTML = s.review ? reviewHTML() : sectionHTML(s);
+	refreshNav();
+}
+function go(id, focusQ){
+	if (!SEC[id]) return;
+	state.section = id; scheduleSave(); render();
+	if (focusQ) {
+		const el = $('q-' + domId(focusQ));
+		if (el) { el.scrollIntoView({block:'center'}); const f = el.querySelector('input,textarea'); if (f) f.focus({preventScroll:true}); }
+	} else {
+		const top = main.getBoundingClientRect().top;
+		if (top < 0 || top > window.innerHeight * 0.5) main.scrollIntoView({block:'start'});
+		main.focus({preventScroll:true});
+	}
+}
+function refreshQ(qid){
+	const e = QMAP[qid]; if (!e) return;
+	const r = cur(), el = $('q-' + domId(qid));
+	if (el) { el.classList.toggle('answered', isAnswered(e.q, r)); el.classList.toggle('flagged', !!r.flags[qid]); }
+	const meta = $('sec-meta');
+	if (meta && e.sec.id === state.section) { const st = stats(e.sec, r); meta.textContent = st.answered + ' of ' + st.total + ' answered' + (st.flagged ? ' · ' + st.flagged + ' to check' : ''); }
+}
+function changed(qid){
+	const r = cur(); r.updated = nowISO();
+	refreshQ(qid); refreshNav(); scheduleSave();
+	if (qid === 'p.org') renderRecords();
+}
+
+/* Events */
+main.addEventListener('input', ev => {
+	const t = ev.target, r = cur();
+	if (t.dataset.note) { const k = t.dataset.note; if (t.value.trim()) r.notes[k] = t.value; else delete r.notes[k]; changed(k); return; }
+	if (t.dataset.other) { const k = t.dataset.other; if (t.value.trim()) r.answers[k + '.other'] = t.value; else delete r.answers[k + '.other']; changed(k); return; }
+	if (t.dataset.q && (t.tagName === 'TEXTAREA' || t.type === 'text')) { const k = t.dataset.q; if (t.value.trim()) r.answers[k] = t.value; else delete r.answers[k]; changed(k); }
+});
+main.addEventListener('change', ev => {
+	const t = ev.target, r = cur();
+	if (t.type === 'checkbox' && t.dataset.q) {
+		const k = t.dataset.q, e = QMAP[k];
+		const picked = Array.prototype.slice.call(main.querySelectorAll('input[type=checkbox][data-q="' + k + '"]')).filter(x => x.checked).map(x => x.value);
+		const ordered = e.q.opts.filter(o => picked.indexOf(o) > -1);
+		if (ordered.length) r.answers[k] = ordered; else delete r.answers[k];
+		changed(k);
+		if (k === 'p.areas') refreshNav();
+		return;
+	}
+	if (t.type === 'radio' && t.dataset.q && t.checked) {
+		const e = QMAP[t.dataset.q], val = e.q.t === 'scale' ? Number(t.value) : t.value;
+		if (r.answers[e.q.id] !== val) { r.answers[e.q.id] = val; changed(e.q.id); }
+		return;
+	}
+	if (t.id === 'imp-file' && t.files && t.files[0]) {
+		const f = t.files[0];
+		if (f.size > 5 * 1024 * 1024) { const m = $('imp-msg'); m.textContent = 'That file is too large to be a fact-find export.'; m.className = 'msg err'; return; }
+		const fr = new FileReader();
+		fr.onload = () => importText(String(fr.result || ''));
+		fr.onerror = () => { const m = $('imp-msg'); m.textContent = 'That file could not be read.'; m.className = 'msg err'; };
+		fr.readAsText(f);
+	}
+});
+main.addEventListener('click', ev => {
+	const t = ev.target;
+	if (t.matches && t.matches('input[type=radio][data-q]')) {
+		const e = QMAP[t.dataset.q], r = cur(), val = e.q.t === 'scale' ? Number(t.value) : t.value;
+		if (r.answers[e.q.id] === val && t.dataset.was === '1') { t.checked = false; delete r.answers[e.q.id]; changed(e.q.id); }
+		return;
+	}
+	const b = t.closest ? t.closest('button') : null; if (!b) return;
+	if (b.dataset.flag) {
+		const k = b.dataset.flag, r = cur(), on = !r.flags[k];
+		if (on) r.flags[k] = true; else delete r.flags[k];
+		b.setAttribute('aria-pressed', String(on));
+		const note = b.parentNode.querySelector('.flag-note'); note.hidden = !on;
+		if (on) note.querySelector('input').focus();
+		changed(k); return;
+	}
+	if (b.dataset.go) { go(b.dataset.go); return; }
+	if (b.dataset.jump) { const e = QMAP[b.dataset.jump]; if (e) go(e.sec.id, e.q.id); return; }
+	const act = b.dataset.act; if (!act) return;
+	const r = cur(), base = 'fact-find-' + slug(recTitle(r)) + '-' + today(), all = Object.keys(state.records).map(k => state.records[k]);
+	if (act === 'new') newRecord();
+	else if (act === 'example') openExample();
+	else if (act === 'copy-md') copyText(toMarkdown(r), 'Summary');
+	else if (act === 'copy-json-one') copyText(toJSON([r]), 'Data');
+	else if (act === 'copy-json-all') copyText(toJSON(all), 'All data');
+	else if (act === 'save-md') saveFile(base + '.md', toMarkdown(r));
+	else if (act === 'save-csv-one') saveFile(base + '.csv', toCSV([r]));
+	else if (act === 'save-json-one') saveFile(base + '.json', toJSON([r]));
+	else if (act === 'save-csv-all') saveFile('fact-finds-all-' + today() + '.csv', toCSV(all));
+	else if (act === 'save-json-all') saveFile('fact-finds-all-' + today() + '.json', toJSON(all));
+	else if (act === 'import-paste') { const ta = $('imp-paste'); if (ta && ta.value.trim()) importText(ta.value.trim()); else { const m = $('imp-msg'); m.textContent = 'Paste the copied data into the box first.'; m.className = 'msg err'; } }
+});
+/* Remember whether a radio was already selected before this press, so pressing it again clears it. */
+main.addEventListener('pointerdown', ev => { const l = ev.target.closest && ev.target.closest('label.opt'); if (!l) return; const i = l.querySelector('input[type=radio]'); if (i) i.dataset.was = i.checked ? '1' : '0'; });
+main.addEventListener('keydown', ev => { const t = ev.target; if (t.matches && t.matches('input[type=radio]')) t.dataset.was = (ev.key === ' ' && t.checked) ? '1' : '0'; });
+
+rail.addEventListener('click', ev => { const b = ev.target.closest('button[data-go]'); if (b) go(b.dataset.go); });
+
+recSelect.addEventListener('change', () => { if (state.records[recSelect.value]) { state.current = recSelect.value; persist(); render(); resetDelete(); } });
+
+function newRecord(){ const r = blank(); state.records[r.id] = r; state.current = r.id; persist(); renderRecords(); go('profile'); toast('New fact-find started'); }
+function openExample(){
+	let id = Object.keys(state.records).find(k => state.records[k].example);
+	if (!id) { const ex = makeExample(); state.records[ex.id] = ex; id = ex.id; }
+	state.current = id; persist(); renderRecords(); go('profile');
+}
+$('btn-new').addEventListener('click', newRecord);
+
+const delBtn = $('btn-del'); let delTimer = null;
+function resetDelete(){ clearTimeout(delTimer); delBtn.textContent = 'Delete'; delBtn.classList.remove('danger'); delBtn.dataset.armed = ''; }
+delBtn.addEventListener('click', () => {
+	if (delBtn.dataset.armed !== '1') {
+		delBtn.dataset.armed = '1'; delBtn.textContent = 'Tap again to delete'; delBtn.classList.add('danger');
+		delTimer = setTimeout(resetDelete, 4000); return;
+	}
+	const gone = recTitle(cur());
+	delete state.records[state.current];
+	const ids = Object.keys(state.records);
+	if (!ids.length) { const r = blank(); state.records[r.id] = r; state.current = r.id; state.section = 'profile'; }
+	else state.current = ids.sort((a, b) => (state.records[b].updated || '').localeCompare(state.records[a].updated || ''))[0];
+	resetDelete(); persist(); renderRecords(); render(); toast('Deleted ' + gone);
+});
+
+/* Boot */
+buildRail(); renderRecords(); render(); setStatus();
+try { localStorage.setItem(KEY + '-probe', '1'); localStorage.removeItem(KEY + '-probe'); } catch (e) { storageOK = false; setStatus(); }
+
+if (window.claude && typeof window.claude.use === 'function') {
+	window.claude.use('downloads').then(d => { dl = d; dlState = d ? 'ready' : 'none'; if (state.section === 'review') render(); }).catch(() => { dlState = 'none'; if (state.section === 'review') render(); });
+} else { dlState = 'local'; }
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,909 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="Six questions for any topic: why, who, what, how, when and where.">
+<title>Curiosity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: the same working shell as the Systems fact-find. Sticky rail (About, Topics, one entry per topic, Review) beside one readable column. Each topic page is six question words, highlighted like a marker once answered. Tokens follow selfdriven.agency, with the Curious mode yellow as the marker. */
+:root{
+	--paper:#ffffff;
+	--surface:#f6f5f7;
+	--ink:#24202a;
+	--muted:#625c65;
+	--line:#e6e3e7;
+	--accent:#de5a31;
+	--accent-ink:#b53e1a;
+	--accent-soft:#fbebe4;
+	--curious:#f5c842;
+	--mark:#f9dc76;
+	--on-curious:#24202a;
+	--flag:#8a5d00;
+	--flag-soft:#fdf2d4;
+	--ok:#286647;
+	--btn-bg:#24202a;
+	--btn-fg:#ffffff;
+	--on-accent:#ffffff;
+	--font-display:'Space Grotesk','Helvetica Neue',Arial,sans-serif;
+	--font-body:'DM Sans','Helvetica Neue',Arial,sans-serif;
+	--font-mono:ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+	:root:not([data-theme="light"]){
+		--paper:#141217;--surface:#1d1b21;--ink:#f1eef3;--muted:#b3acb7;--line:#302c35;
+		--accent:#e8673f;--accent-ink:#f2916f;--accent-soft:#3a2219;
+		--curious:#f5c842;--mark:#6b5617;--on-curious:#24202a;
+		--flag:#ecbd52;--flag-soft:#33290f;--ok:#62c393;
+		--btn-bg:#f1eef3;--btn-fg:#141217;--on-accent:#ffffff;
+		color-scheme:dark;
+	}
+}
+:root[data-theme="dark"]{
+	--paper:#141217;--surface:#1d1b21;--ink:#f1eef3;--muted:#b3acb7;--line:#302c35;
+	--accent:#e8673f;--accent-ink:#f2916f;--accent-soft:#3a2219;
+	--curious:#f5c842;--mark:#6b5617;--on-curious:#24202a;
+	--flag:#ecbd52;--flag-soft:#33290f;--ok:#62c393;
+	--btn-bg:#f1eef3;--btn-fg:#141217;--on-accent:#ffffff;
+	color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 var(--font-body)}
+h1,h2,h3{font-family:var(--font-display);letter-spacing:-.03em;line-height:1.12;text-wrap:balance;margin:0}
+p{margin:0}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-ink);margin-bottom:8px}
+
+/* Header */
+.top{border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;flex-wrap:wrap;gap:20px 40px;align-items:flex-end;justify-content:space-between;padding-block:26px 22px}
+.brand{min-width:0;flex:1 1 380px}
+.brand h1{font-size:clamp(2.1rem,4.6vw,3rem)}
+.six{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:10px;font:600 clamp(1rem,2.2vw,1.2rem)/1.3 var(--font-display);letter-spacing:-.02em}
+.six span{background:linear-gradient(transparent 58%,var(--mark) 58%);padding:0 2px}
+.brand p.lede{margin-top:10px;color:var(--muted);max-width:36em}
+.recbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;flex:1 1 340px;max-width:460px;min-width:0}
+.recbar>label{width:100%;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.status{width:100%;font-size:13px;color:var(--muted)}
+.status.warn{color:var(--flag);font-weight:600}
+
+select,input[type=text],textarea{font:inherit;font-size:16px;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:10px 12px;width:100%;min-width:0}
+select{flex:1 1 200px;width:auto;cursor:pointer}
+textarea{resize:vertical;min-height:96px;line-height:1.5}
+input[type=text]:hover,textarea:hover,select:hover{border-color:var(--muted)}
+input[type=text]:focus,textarea:focus,select:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:600;font-size:14px;line-height:1.1;border-radius:6px;padding:10px 16px;min-height:42px;border:1px solid var(--btn-bg);background:var(--btn-bg);color:var(--btn-fg);cursor:pointer;transition:background .15s,border-color .15s,color .15s}
+.btn:hover{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--ink);background:transparent;color:var(--ink)}
+.btn.danger{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-ink)}
+.btn.small{min-height:34px;padding:6px 12px;font-size:13px}
+.btn svg{width:16px;height:16px;flex:0 0 auto}
+.btn-row{display:flex;flex-wrap:wrap;gap:8px}
+.linkish{background:none;border:0;padding:0;color:var(--accent-ink);font-weight:600;text-decoration:underline;text-underline-offset:4px;cursor:pointer}
+
+/* Layout */
+.layout{display:grid;grid-template-columns:minmax(0,1fr)}
+.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);border-bottom:1px solid var(--line);margin-inline:-20px;padding:10px 20px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.rail::-webkit-scrollbar{display:none}
+.nav-btn{flex:0 0 auto;display:grid;grid-template-columns:auto auto;gap:4px 10px;align-items:center;text-align:left;background:var(--surface);border:1px solid transparent;border-radius:8px;padding:8px 12px;cursor:pointer;max-width:240px}
+.nav-btn:hover{border-color:var(--line)}
+.nav-btn[aria-current="step"]{background:var(--paper);border-color:var(--ink)}
+.nav-name{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.nav-meta{display:flex;gap:6px;align-items:center;justify-content:flex-end;font:12px/1 var(--font-mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.nav-flag{background:var(--flag-soft);color:var(--flag);border-radius:999px;padding:3px 6px;font-weight:700}
+.nav-bar{grid-column:1/-1;height:3px;background:var(--line);border-radius:2px;overflow:hidden}
+.nav-bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+.nav-btn.complete .nav-bar i{background:var(--ok)}
+.nav-btn.topic .nav-name::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--curious);margin-right:8px;vertical-align:1px}
+.nav-btn.plain{background:transparent;border-color:var(--line)}
+.nav-btn.plain[aria-current="step"]{border-color:var(--ink)}
+.rail-label,.rail-note{display:none}
+
+.main{min-width:0;max-width:760px;padding-block:28px 72px;scroll-margin-top:70px}
+.main:focus{outline:none}
+
+@media (min-width:960px){
+	.layout{grid-template-columns:240px minmax(0,1fr);gap:56px}
+	.rail{flex-direction:column;align-self:start;margin:0;padding:28px 0;border:0;overflow:visible;gap:2px}
+	.nav-btn{width:100%;max-width:none;background:transparent;border-radius:6px;padding:10px 12px}
+	.nav-btn[aria-current="step"]{background:var(--surface);border-color:transparent}
+	.nav-btn[aria-current="step"] .nav-name{color:var(--accent-ink)}
+	.nav-btn.plain{margin-top:10px}
+	.nav-btn.plain[aria-current="step"]{border-color:var(--line)}
+	.rail-label{display:block;margin:14px 12px 4px;font:600 11px var(--font-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+	.rail-note{display:block;margin-top:18px;padding:0 12px;font-size:13px;color:var(--muted)}
+	.main{padding-block:36px 96px;scroll-margin-top:12px}
+}
+
+/* Section head */
+.sec-head{display:grid;gap:10px;padding-bottom:22px;border-bottom:1px solid var(--line)}
+.sec-head h2{font-size:clamp(1.7rem,3.4vw,2.3rem);overflow-wrap:anywhere}
+.sec-head .intro{color:var(--muted);font-size:17px;max-width:36em}
+.sec-meta{font:13px var(--font-mono);color:var(--muted);font-variant-numeric:tabular-nums}
+
+.banner{margin-top:22px;padding:14px 16px;border-radius:8px;background:var(--surface);display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between;font-size:15px}
+.banner p{flex:1 1 280px;min-width:0}
+.banner.example{background:var(--accent-soft)}
+
+.steps{list-style:none;counter-reset:s;margin:24px 0 0;padding:0;display:grid;gap:14px}
+.steps li{counter-increment:s;display:grid;grid-template-columns:32px minmax(0,1fr);gap:12px;align-items:start}
+.steps li::before{content:counter(s);display:grid;place-items:center;width:32px;height:32px;border-radius:50%;border:1px solid var(--line);font:600 14px var(--font-display);color:var(--accent-ink)}
+.steps b{display:block}
+.steps span{color:var(--muted);font-size:15px}
+.privacy{margin-top:20px;font-size:14px;color:var(--muted);padding-left:14px;border-left:2px solid var(--flag)}
+
+/* Plain fields (About) */
+.field{padding-block:20px;border-top:1px solid var(--line);display:grid;gap:8px}
+.fields{margin-top:28px}
+.field label{font-weight:600;font-size:17px}
+.field .hint{color:var(--muted);font-size:14px;margin-top:-4px}
+
+/* Topics manager */
+.adder{margin-top:28px;display:grid;gap:12px}
+.adder form{display:flex;gap:8px;flex-wrap:wrap}
+.adder form input{flex:1 1 220px;width:auto}
+.adder-label{font-weight:600;font-size:17px}
+.suggest{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:6px;min-height:38px;padding:7px 13px;border:1px dashed var(--line);border-radius:999px;background:transparent;font-size:14px;cursor:pointer}
+.chip:hover{border-style:solid;border-color:var(--ink)}
+.chip svg{width:14px;height:14px}
+.form-msg{font-size:14px;color:var(--accent-ink);min-height:1.4em}
+.tlist{list-style:none;margin:28px 0 0;padding:0;border-top:1px solid var(--line)}
+.tlist li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;align-items:center;padding-block:14px;border-bottom:1px solid var(--line)}
+.tlist .t-open{justify-self:start;background:none;border:0;padding:0;text-align:left;cursor:pointer;font:600 17px/1.3 var(--font-display);letter-spacing:-.02em;overflow-wrap:anywhere}
+.tlist .t-open:hover{color:var(--accent-ink)}
+.tlist .t-meta{grid-column:1;font:12px var(--font-mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.tlist .t-move{grid-column:2;grid-row:1/span 2;display:flex;gap:4px}
+.icon-btn{display:grid;place-items:center;width:38px;height:38px;border-radius:6px;border:1px solid var(--line);background:transparent;cursor:pointer;color:var(--ink)}
+.icon-btn:hover:not(:disabled){border-color:var(--ink)}
+.icon-btn:disabled{opacity:.35;cursor:default}
+.icon-btn svg{width:16px;height:16px}
+.empty{padding:16px;border:1px dashed var(--line);border-radius:8px;color:var(--muted);font-size:15px}
+
+/* The six questions */
+.w{padding-block:24px;border-top:1px solid var(--line);display:grid;gap:12px}
+.w:first-of-type{margin-top:8px}
+.w-head{display:grid;gap:4px}
+.w-word{justify-self:start;font:700 clamp(1.7rem,4.4vw,2.2rem)/1.05 var(--font-display);letter-spacing:-.045em;padding:0 3px;margin-left:-3px;transition:background-size .3s}
+.w-word{background:linear-gradient(transparent 60%,var(--mark) 60%) no-repeat 0 0/0% 100%}
+.w.answered .w-word{background-size:100% 100%}
+.w-q{font-weight:600;font-size:17px;line-height:1.4}
+.prompts{display:flex;flex-wrap:wrap;gap:6px}
+.prompt{display:inline-flex;align-items:center;gap:6px;text-align:left;font-size:13px;line-height:1.3;border:1px solid var(--line);border-radius:999px;padding:6px 11px;min-height:32px;background:var(--surface);color:var(--muted);cursor:pointer}
+.prompt:hover{color:var(--ink);border-color:var(--muted)}
+.prompt svg{width:12px;height:12px;flex:0 0 auto}
+.w-foot{display:grid;gap:8px}
+
+.flag-btn{justify-self:start;display:inline-flex;align-items:center;gap:6px;background:none;border:1px dashed var(--line);border-radius:999px;padding:6px 12px;min-height:34px;font-size:13px;color:var(--muted);cursor:pointer}
+.flag-btn:hover{border-color:var(--flag);color:var(--ink)}
+.flag-btn svg{width:14px;height:14px}
+.flag-btn[aria-pressed="true"]{background:var(--flag-soft);border:1px solid var(--flag);color:var(--ink);font-weight:600}
+.flag-note{display:grid;gap:6px;max-width:520px}
+.flag-note label{font-size:13px;color:var(--muted)}
+
+.gauges{margin-top:16px;padding:20px;border-radius:10px;background:var(--surface);display:grid;gap:22px}
+.gauges h3{font-size:1.15rem}
+.gauge{display:grid;gap:8px}
+.gauge-label{font-weight:600}
+.opt{position:relative;display:flex}
+.opt input{position:absolute;opacity:0;width:1px;height:1px;margin:0;pointer-events:none}
+.opt span{width:100%;display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--paper);font:600 15px var(--font-mono);font-variant-numeric:tabular-nums;cursor:pointer;user-select:none}
+.opt span:hover{border-color:var(--muted)}
+.opt input:checked+span{background:var(--accent-soft);border-color:var(--accent)}
+.opt input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
+.scale{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;max-width:400px}
+.scale-ends{display:flex;justify-content:space-between;gap:12px;max-width:400px;font-size:13px;color:var(--muted)}
+
+.t-settings{margin-top:32px;padding-top:20px;border-top:1px solid var(--line);display:grid;gap:10px}
+.t-settings label{font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.t-settings .row{display:flex;flex-wrap:wrap;gap:8px}
+.t-settings .row input{flex:1 1 220px;width:auto}
+
+.sec-foot{margin-top:40px;padding-top:22px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between}
+
+/* Review */
+.rv{margin-top:40px;display:grid;gap:14px}
+.rv>h3{font-size:1.3rem;display:flex;align-items:center;gap:10px}
+.rv>p{color:var(--muted);max-width:38em}
+.pill{display:inline-flex;align-items:center;font:700 12px/1 var(--font-mono);padding:4px 8px;border-radius:999px;background:var(--surface);color:var(--muted)}
+.pill.flag{background:var(--flag-soft);color:var(--flag)}
+.cov{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.cov li{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"name num" "bar bar" "tags tags";gap:8px 14px;align-items:center;padding-block:14px;border-bottom:1px solid var(--line)}
+.cov-name{grid-area:name;justify-self:start;background:none;border:0;padding:0;font-weight:600;cursor:pointer;text-align:left;overflow-wrap:anywhere}
+.cov-name:hover{color:var(--accent-ink)}
+.cov-bar{grid-area:bar;height:6px;background:var(--surface);border-radius:3px;overflow:hidden}
+.cov-bar i{display:block;height:100%;background:var(--accent)}
+.cov-bar.complete i{background:var(--ok)}
+.cov-num{grid-area:num;font:13px var(--font-mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.cov-tags{grid-area:tags;display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;font-size:13px;color:var(--muted)}
+.cov-words{display:inline-flex;gap:4px}
+.cov-words b{font:600 11px var(--font-mono);padding:2px 5px;border-radius:4px;border:1px solid var(--line);color:var(--muted)}
+.cov-words b.on{background:var(--curious);border-color:var(--curious);color:var(--on-curious)}
+.meter{display:inline-flex;align-items:center;gap:6px}
+.dots{display:inline-flex;gap:3px}
+.dots i{width:8px;height:8px;border-radius:50%;background:var(--line)}
+.dots i.on{background:var(--accent)}
+.dim-note{font-style:italic}
+@media (min-width:700px){
+	.cov li{grid-template-columns:170px minmax(0,1fr) 50px;grid-template-areas:"name bar num" ". tags tags"}
+}
+.dig{list-style:none;margin:0;padding:0;counter-reset:d;display:grid;gap:8px}
+.dig li{counter-increment:d;display:grid;grid-template-columns:28px minmax(0,1fr);gap:4px 12px;padding:12px 14px;border:1px solid var(--line);border-radius:8px}
+.dig li::before{content:counter(d);grid-row:1/span 2;display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--curious);color:var(--on-curious);font:700 13px var(--font-display)}
+.dig button{justify-self:start;background:none;border:0;padding:0;font-weight:600;cursor:pointer;text-align:left;overflow-wrap:anywhere}
+.dig .why{font-size:14px;color:var(--muted)}
+.todo{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.todo li{display:grid;gap:2px;padding:12px 14px;border-radius:8px;background:var(--flag-soft)}
+.todo .where{font:600 11px var(--font-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--flag)}
+.todo button{background:none;border:0;padding:0;text-align:left;font-weight:600;cursor:pointer;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:4px}
+.todo .note{font-size:14px;color:var(--muted)}
+.share-block{display:grid;gap:10px;padding:18px;border:1px solid var(--line);border-radius:10px}
+.share-block h4{margin:0;font:600 15px var(--font-body)}
+.share-block .sub{font-size:14px;color:var(--muted)}
+.share-label{font:600 11px var(--font-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.fallback{display:grid;gap:8px;padding:14px;border-radius:8px;background:var(--surface)}
+.fallback textarea{font:13px/1.5 var(--font-mono);min-height:180px}
+.import{display:grid;gap:10px}
+.file-pick{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.file-pick input[type=file]{font-size:14px;max-width:100%;color:var(--muted)}
+.msg{font-size:14px;min-height:1.4em}
+.msg.ok{color:var(--ok)}
+.msg.err{color:var(--accent-ink)}
+
+.toast{position:fixed;left:16px;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));margin:0 auto;max-width:420px;z-index:20;background:var(--btn-bg);color:var(--btn-fg);border-radius:8px;padding:12px 16px;font-size:14px;font-weight:600;text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+	<symbol id="ic-flag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22v-7"/></symbol>
+	<symbol id="ic-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+	<symbol id="ic-save" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></symbol>
+	<symbol id="ic-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></symbol>
+	<symbol id="ic-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></symbol>
+	<symbol id="ic-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></symbol>
+</svg>
+
+<header class="top">
+	<div class="wrap">
+		<div class="brand">
+			<p class="eyebrow">selfdriven Agency</p>
+			<h1>Curiosity</h1>
+			<p class="six" aria-label="Why, who, what, how, when, where"><span>Why</span><span>Who</span><span>What</span><span>How</span><span>When</span><span>Where</span></p>
+			<p class="lede">Add the topics you want to explore. Each one gets the same six questions. Answer what you know and flag what you don't.</p>
+		</div>
+		<div class="recbar">
+			<label for="rec-select">Current inquiry</label>
+			<select id="rec-select"></select>
+			<button class="btn ghost" type="button" id="btn-new"><svg aria-hidden="true"><use href="#ic-plus"/></svg>New</button>
+			<button class="btn ghost" type="button" id="btn-del">Delete</button>
+			<p class="status" id="save-status" role="status"></p>
+		</div>
+	</div>
+</header>
+
+<div class="wrap">
+	<div class="layout">
+		<nav class="rail" id="rail" aria-label="Sections"></nav>
+		<main class="main" id="main" tabindex="-1"></main>
+	</div>
+</div>
+
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+(function(){
+'use strict';
+
+const KEY = 'sd-agency-curiosity-v1';
+const SCHEMA = 'selfdriven-agency.curiosity';
+const MAX_TOPICS = 40;
+
+/* The six questions. Each question wraps the topic name: [before, after]. */
+const WS = [
+	{k:'why',   word:'Why',   q:['Why does ', ' matter right now?'],
+		prompts:['What problem are you trying to solve?', 'What happens if nothing changes?', 'What would getting this right make possible?']},
+	{k:'who',   word:'Who',   q:['Who is involved in ', '?'],
+		prompts:['Who does the work today?', 'Who makes the decisions?', 'Who relies on it, inside or outside?']},
+	{k:'what',  word:'What',  q:['What does ', ' involve?'],
+		prompts:['What tasks, records or documents are part of it?', 'What tools or systems are used?', 'What works well, and what does not?']},
+	{k:'how',   word:'How',   q:['How does ', ' work today?'],
+		prompts:['Walk through the steps, start to finish.', 'How are things approved or checked?', 'How do you know it has gone right?']},
+	{k:'when',  word:'When',  q:['When does ', ' happen?'],
+		prompts:['How often: daily, monthly, yearly?', 'Which deadlines or key dates matter?', 'When did it last go wrong?']},
+	{k:'where', word:'Where', q:['Where does ', ' live?'],
+		prompts:['Where is information kept: apps, folders, inboxes, paper?', 'Where does the work happen: places, states, countries?', 'Where does it get stuck or lost?']}
+];
+const WK = WS.map(w => w.k);
+const GAUGES = [
+	{k:'urgency', label:'How urgent is this topic?', lo:'Can wait', hi:'Urgent'},
+	{k:'clarity', label:'How clear is it to you right now?', lo:'Foggy', hi:'Crystal clear'}
+];
+const ABOUT = [
+	{k:'org', t:'text', label:'Organisation, project or client name'},
+	{k:'person', t:'text', label:'Your name and role', hint:'For example: Sam Lee, founder'},
+	{k:'contact', t:'text', label:'Best way to reach you for follow-up', hint:'An email address or phone number'},
+	{k:'context', t:'long', label:'What is this inquiry about overall?', hint:'A sentence or two is plenty.'}
+];
+const SUGGEST = ['Accounting', 'Tax compliance', 'Legal', 'Internal communication', 'Marketing & brand', 'Governance', 'Funding & grants', 'People & roles', 'Technology & tools', 'Data & privacy', 'Operations', 'Risk & insurance'];
+
+/* Helpers */
+function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function uid(p){ return (p || 'cq-') + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2,7); }
+function nowISO(){ return new Date().toISOString(); }
+function fmtDate(iso){ try { return new Date(iso).toLocaleDateString('en-AU', {day:'numeric', month:'short', year:'numeric'}); } catch(e){ return ''; } }
+function fmtTime(d){ try { return d.toLocaleTimeString('en-AU', {hour:'numeric', minute:'2-digit'}); } catch(e){ return ''; } }
+function today(){ const d = new Date(), p = n => String(n).padStart(2, '0'); return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()); }
+function slug(s){ return (s || 'inquiry').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40) || 'inquiry'; }
+function blank(){ const t = nowISO(); return {id:uid(), created:t, updated:t, about:{}, topics:[]}; }
+function newTopic(name){ return {id:uid('t'), name:name, answers:{}, flags:{}, notes:{}}; }
+function recTitle(r){ return ((r.about && r.about.org) || '').trim() || 'Untitled inquiry'; }
+const has = v => typeof v === 'string' && v.trim() !== '';
+function topicStats(t){ let a = 0, f = 0; WK.forEach(k => { if (has(t.answers[k])) a++; if (t.flags[k]) f++; }); return {answered:a, total:WK.length, flagged:f}; }
+function aboutStats(r){ let a = 0; ABOUT.forEach(f => { if (has(r.about[f.k])) a++; }); return {answered:a, total:ABOUT.length}; }
+function qText(w, name){ return w.q[0] + name + w.q[1]; }
+function findTopic(r, id){ return r.topics.find(t => t.id === id); }
+
+/* State */
+let storageOK = true, lastSaved = null;
+let state = load();
+function load(){
+	try {
+		const raw = localStorage.getItem(KEY);
+		if (raw) {
+			const s = JSON.parse(raw);
+			if (s && s.records && typeof s.records === 'object' && Object.keys(s.records).length) {
+				Object.keys(s.records).forEach(k => { const r = s.records[k]; r.about = r.about || {}; r.topics = Array.isArray(r.topics) ? r.topics : []; r.topics.forEach(t => { t.answers = t.answers || {}; t.flags = t.flags || {}; t.notes = t.notes || {}; }); });
+				if (!s.records[s.current]) s.current = Object.keys(s.records)[0];
+				s.view = s.view || 'about';
+				return s;
+			}
+		}
+	} catch (e) { storageOK = false; }
+	const r = blank();
+	return {v:1, current:r.id, view:'about', records:{[r.id]:r}};
+}
+function persist(){
+	try { localStorage.setItem(KEY, JSON.stringify(state)); storageOK = true; lastSaved = new Date(); }
+	catch (e) { storageOK = false; }
+	setStatus();
+}
+let saveTimer = null;
+function scheduleSave(){ clearTimeout(saveTimer); saveTimer = setTimeout(persist, 350); }
+function cur(){ return state.records[state.current]; }
+function viewValid(v){
+	const r = cur();
+	if (v === 'about' || v === 'topics' || v === 'review') return true;
+	return v && v.indexOf('t:') === 0 && !!findTopic(r, v.slice(2));
+}
+
+const $ = id => document.getElementById(id);
+const rail = $('rail'), main = $('main'), recSelect = $('rec-select'), statusEl = $('save-status');
+
+function setStatus(){
+	if (!storageOK) { statusEl.textContent = 'Not saving: this browser is blocking storage. Use Review & share to copy your answers.'; statusEl.className = 'status warn'; }
+	else { statusEl.textContent = lastSaved ? 'Saved in this browser at ' + fmtTime(lastSaved) : 'Saves automatically in this browser'; statusEl.className = 'status'; }
+}
+let toastTimer = null;
+function toast(msg){ const el = $('toast'); el.textContent = msg; el.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => { el.hidden = true; }, 2600); }
+
+function renderRecords(){
+	const ids = Object.keys(state.records).sort((a, b) => (state.records[b].updated || '').localeCompare(state.records[a].updated || ''));
+	recSelect.innerHTML = ids.map(id => { const r = state.records[id]; return '<option value="' + esc(id) + '"' + (id === state.current ? ' selected' : '') + '>' + esc(recTitle(r)) + (r.example ? ' (example)' : '') + ' · ' + esc(fmtDate(r.updated)) + '</option>'; }).join('');
+}
+
+/* Rail */
+function buildRail(){
+	const r = cur(), keep = rail.scrollLeft;
+	let h = '<button type="button" class="nav-btn" id="nav-about" data-go="about"><span class="nav-name">About</span><span class="nav-meta"><span class="nav-count"></span></span><span class="nav-bar"><i></i></span></button>';
+	h += '<button type="button" class="nav-btn" id="nav-topics" data-go="topics"><span class="nav-name">Topics</span><span class="nav-meta"><span class="nav-count"></span></span></button>';
+	if (r.topics.length) h += '<p class="rail-label">Your topics</p>';
+	r.topics.forEach(t => {
+		h += '<button type="button" class="nav-btn topic" id="nav-t-' + esc(t.id) + '" data-go="t:' + esc(t.id) + '"><span class="nav-name">' + esc(t.name) + '</span><span class="nav-meta"><span class="nav-flag" hidden></span><span class="nav-count"></span></span><span class="nav-bar"><i></i></span></button>';
+	});
+	h += '<button type="button" class="nav-btn plain" id="nav-review" data-go="review"><span class="nav-name">Review &amp; share</span><span class="nav-meta"><span class="nav-flag" hidden></span></span></button>';
+	h += '<p class="rail-note">Answers save in this browser only. Use Review &amp; share to send them.</p>';
+	rail.innerHTML = h; rail.scrollLeft = keep;
+	refreshNav();
+}
+function setCurrent(el, on){ if (on) el.setAttribute('aria-current', 'step'); else el.removeAttribute('aria-current'); }
+function refreshNav(){
+	const r = cur();
+	const ab = $('nav-about'); if (!ab) return;
+	const as = aboutStats(r);
+	ab.querySelector('.nav-count').textContent = as.answered + '/' + as.total;
+	ab.querySelector('.nav-bar i').style.width = Math.round(as.answered / as.total * 100) + '%';
+	ab.classList.toggle('complete', as.answered === as.total);
+	setCurrent(ab, state.view === 'about');
+	const tp = $('nav-topics');
+	tp.querySelector('.nav-count').textContent = r.topics.length;
+	setCurrent(tp, state.view === 'topics');
+	let flags = 0;
+	r.topics.forEach(t => {
+		const b = $('nav-t-' + t.id); if (!b) return;
+		const st = topicStats(t); flags += st.flagged;
+		b.querySelector('.nav-count').textContent = st.answered + '/' + st.total;
+		const f = b.querySelector('.nav-flag'); f.hidden = !st.flagged; f.textContent = st.flagged; f.title = st.flagged + ' to check';
+		b.querySelector('.nav-bar i').style.width = Math.round(st.answered / st.total * 100) + '%';
+		b.classList.toggle('complete', st.answered === st.total);
+		b.querySelector('.nav-name').textContent = t.name;
+		b.setAttribute('aria-label', t.name + ', ' + st.answered + ' of 6 answered' + (st.flagged ? ', ' + st.flagged + ' to check' : ''));
+		setCurrent(b, state.view === 't:' + t.id);
+	});
+	const rv = $('nav-review'), rf = rv.querySelector('.nav-flag');
+	rf.hidden = !flags; rf.textContent = flags; rf.title = flags + ' to check';
+	setCurrent(rv, state.view === 'review');
+	const active = rail.querySelector('[aria-current]');
+	if (active && rail.scrollWidth > rail.clientWidth) {
+		const l = active.offsetLeft, w = active.offsetWidth;
+		if (l < rail.scrollLeft || l + w > rail.scrollLeft + rail.clientWidth) rail.scrollLeft = Math.max(0, l - 20);
+	}
+}
+
+/* Views */
+function exampleBanner(r){ return r.example ? '<div class="banner example"><p>This is a made-up example. Changes here only affect the example.</p><button type="button" class="btn" data-act="new">Start my own</button></div>' : ''; }
+
+function aboutHTML(){
+	const r = cur(), st = aboutStats(r);
+	let h = '<header class="sec-head"><p class="eyebrow">Start here</p><h2>About this inquiry</h2><p class="intro">Who is asking, and what it is about. Then add the topics you want to explore.</p><p class="sec-meta" id="sec-meta">' + st.answered + ' of ' + st.total + ' answered</p></header>';
+	h += exampleBanner(r);
+	h += '<ol class="steps"><li><div><b>Add your topics.</b><span>Anything you want to understand better: Accounting, Legal, Marketing, a project, a problem.</span></div></li>' +
+		'<li><div><b>Ask the six questions.</b><span>Why, who, what, how, when and where. Tap a prompt if you need a nudge. Flag anything you are unsure of.</span></div></li>' +
+		'<li><div><b>Share what you found.</b><span>Review &amp; share shows where to dig first, and copies or saves your answers to send.</span></div></li></ol>' +
+		'<p class="privacy">Please do not type passwords, bank or card numbers, or tax file numbers. Tell us where things are kept instead.</p>';
+	if (!r.example) h += '<p style="margin-top:14px;font-size:15px">Want to see one filled in? <button type="button" class="linkish" data-act="example">Open the example</button></p>';
+	h += '<div class="fields">';
+	ABOUT.forEach(f => {
+		const v = r.about[f.k] || '';
+		h += '<div class="field"><label for="a-' + f.k + '">' + esc(f.label) + '</label>' + (f.hint ? '<p class="hint">' + esc(f.hint) + '</p>' : '') +
+			(f.t === 'long' ? '<textarea id="a-' + f.k + '" data-about="' + f.k + '" rows="3">' + esc(v) + '</textarea>' : '<input type="text" id="a-' + f.k + '" data-about="' + f.k + '" value="' + esc(v) + '" autocomplete="off">') + '</div>';
+	});
+	h += '</div>';
+	h += '<div class="sec-foot"><span></span><button type="button" class="btn" data-go="topics">Next: Topics</button></div>';
+	return h;
+}
+
+function topicsHTML(){
+	const r = cur(), names = r.topics.map(t => t.name.toLowerCase());
+	let h = '<header class="sec-head"><p class="eyebrow">Your topics</p><h2>What do you want to explore?</h2><p class="intro">Add as many topics as you like. Each one gets the same six questions, so you can compare them side by side later.</p><p class="sec-meta">' + r.topics.length + ' topic' + (r.topics.length === 1 ? '' : 's') + '</p></header>';
+	h += exampleBanner(r);
+	h += '<div class="adder"><form id="add-form" autocomplete="off"><label class="adder-label" for="add-name" style="width:100%">Add a topic</label><input type="text" id="add-name" maxlength="60" placeholder="For example: Accounting"><button type="submit" class="btn"><svg aria-hidden="true"><use href="#ic-plus"/></svg>Add</button></form><p class="form-msg" id="add-msg" role="status"></p>';
+	const sugg = SUGGEST.filter(s => names.indexOf(s.toLowerCase()) === -1);
+	if (sugg.length) h += '<p class="share-label">Or pick one</p><div class="suggest">' + sugg.map(s => '<button type="button" class="chip" data-add="' + esc(s) + '"><svg aria-hidden="true"><use href="#ic-plus"/></svg>' + esc(s) + '</button>').join('') + '</div>';
+	h += '</div>';
+	if (!r.topics.length) h += '<p class="empty" style="margin-top:28px">No topics yet. Add one above to start asking the six questions.</p>';
+	else h += '<ul class="tlist">' + r.topics.map((t, i) => {
+		const st = topicStats(t);
+		return '<li><button type="button" class="t-open" data-go="t:' + esc(t.id) + '">' + esc(t.name) + '</button>' +
+			'<span class="t-move"><button type="button" class="icon-btn" data-move="' + esc(t.id) + '|-1" aria-label="Move ' + esc(t.name) + ' up"' + (i === 0 ? ' disabled' : '') + '><svg aria-hidden="true"><use href="#ic-up"/></svg></button><button type="button" class="icon-btn" data-move="' + esc(t.id) + '|1" aria-label="Move ' + esc(t.name) + ' down"' + (i === r.topics.length - 1 ? ' disabled' : '') + '><svg aria-hidden="true"><use href="#ic-down"/></svg></button></span>' +
+			'<span class="t-meta">' + st.answered + ' of 6 answered' + (st.flagged ? ' · ' + st.flagged + ' to check' : '') + '</span></li>';
+	}).join('') + '</ul>';
+	h += '<div class="sec-foot"><button type="button" class="btn ghost" data-go="about">Back</button>' + (r.topics.length ? '<button type="button" class="btn" data-go="t:' + esc(r.topics[0].id) + '">Start with ' + esc(r.topics[0].name) + '</button>' : '') + '</div>';
+	return h;
+}
+
+function wHTML(t, w){
+	const v = t.answers[w.k] || '', flagged = !!t.flags[w.k], d = t.id + '-' + w.k;
+	return '<section class="w' + (has(v) ? ' answered' : '') + '" id="w-' + d + '">' +
+		'<div class="w-head"><span class="w-word" aria-hidden="true">' + w.word + '</span><label class="w-q" for="' + d + '">' + esc(w.q[0]) + '<span class="tname">' + esc(t.name) + '</span>' + esc(w.q[1]) + '</label></div>' +
+		'<div class="prompts" aria-label="Prompts to add to your answer">' + w.prompts.map((p, i) => '<button type="button" class="prompt" data-prompt="' + w.k + '|' + i + '"><svg aria-hidden="true"><use href="#ic-plus"/></svg>' + esc(p) + '</button>').join('') + '</div>' +
+		'<textarea id="' + d + '" data-w="' + w.k + '" rows="4">' + esc(v) + '</textarea>' +
+		'<div class="w-foot"><button type="button" class="flag-btn" data-flag="' + w.k + '" aria-pressed="' + flagged + '"><svg aria-hidden="true"><use href="#ic-flag"/></svg>Not sure</button>' +
+		'<div class="flag-note"' + (flagged ? '' : ' hidden') + '><label for="n-' + d + '">What needs checking, and who would know?</label><input type="text" id="n-' + d + '" data-note="' + w.k + '" value="' + esc(t.notes[w.k] || '') + '" autocomplete="off"></div></div></section>';
+}
+
+function topicHTML(t){
+	const r = cur(), i = r.topics.indexOf(t), st = topicStats(t);
+	const prev = i > 0 ? 't:' + r.topics[i - 1].id : 'topics', prevName = i > 0 ? r.topics[i - 1].name : 'Topics';
+	const next = i < r.topics.length - 1 ? r.topics[i + 1] : null;
+	let h = '<header class="sec-head"><p class="eyebrow">Topic ' + (i + 1) + ' of ' + r.topics.length + '</p><h2 class="tname">' + esc(t.name) + '</h2><p class="intro">Answer in your own words. Tap a prompt to add it to your answer as a starting point.</p><p class="sec-meta" id="sec-meta">' + st.answered + ' of 6 answered' + (st.flagged ? ' · ' + st.flagged + ' to check' : '') + '</p></header>';
+	h += exampleBanner(r);
+	h += WS.map(w => wHTML(t, w)).join('');
+	h += '<section class="gauges"><h3>Before you move on</h3>' + GAUGES.map(g => {
+		const v = t[g.k];
+		return '<div class="gauge"><p class="gauge-label" id="g-' + t.id + '-' + g.k + '">' + esc(g.label) + '</p><div class="scale" role="radiogroup" aria-labelledby="g-' + t.id + '-' + g.k + '">' + [1,2,3,4,5].map(n =>
+			'<label class="opt"><input type="radio" name="' + t.id + '-' + g.k + '" id="' + t.id + '-' + g.k + '-' + n + '" data-gauge="' + g.k + '" value="' + n + '"' + (v === n ? ' checked' : '') + ' aria-label="' + n + (n === 1 ? ', ' + esc(g.lo) : n === 5 ? ', ' + esc(g.hi) : '') + '"><span>' + n + '</span></label>'
+		).join('') + '</div><div class="scale-ends" aria-hidden="true"><span>1 · ' + esc(g.lo) + '</span><span>5 · ' + esc(g.hi) + '</span></div></div>';
+	}).join('') + '</section>';
+	h += '<div class="t-settings"><label for="rename">Topic name</label><div class="row"><input type="text" id="rename" data-rename="1" maxlength="60" value="' + esc(t.name) + '" autocomplete="off"><button type="button" class="btn ghost" data-act="remove-topic" id="btn-remove-topic">Remove topic</button></div></div>';
+	h += '<div class="sec-foot"><button type="button" class="btn ghost" data-go="' + esc(prev) + '">Back' + (i > 0 ? '' : ' to Topics') + '</button>' +
+		(next ? '<button type="button" class="btn" data-go="t:' + esc(next.id) + '">Next: ' + esc(next.name) + '</button>' : '<button type="button" class="btn" data-go="review">Next: Review &amp; share</button>') + '</div>';
+	return h;
+}
+
+/* Review */
+let dlState = 'pending', dl = null;
+function dotsHTML(v, label){
+	if (typeof v !== 'number') return '<span class="meter">' + esc(label) + ' <span class="dim-note">not rated</span></span>';
+	let d = ''; for (let i = 1; i <= 5; i++) d += '<i' + (i <= v ? ' class="on"' : '') + '></i>';
+	return '<span class="meter">' + esc(label) + ' <span class="dots" role="img" aria-label="' + v + ' of 5">' + d + '</span></span>';
+}
+function digOrder(r){
+	return r.topics.slice().sort((a, b) => {
+		const ua = typeof a.urgency === 'number' ? a.urgency : 0, ub = typeof b.urgency === 'number' ? b.urgency : 0;
+		if (ub !== ua) return ub - ua;
+		const ca = typeof a.clarity === 'number' ? a.clarity : 6, cb = typeof b.clarity === 'number' ? b.clarity : 6;
+		if (ca !== cb) return ca - cb;
+		return topicStats(b).flagged - topicStats(a).flagged;
+	});
+}
+function digReason(t){
+	const parts = [], st = topicStats(t);
+	if (typeof t.urgency === 'number') parts.push('Urgency ' + t.urgency + ' of 5');
+	if (typeof t.clarity === 'number') parts.push('clarity ' + t.clarity + ' of 5');
+	if (st.flagged) parts.push(st.flagged + ' to check');
+	if (st.answered < 6) parts.push((6 - st.answered) + ' unanswered');
+	return parts.join(' · ') || 'Not rated yet';
+}
+function flaggedList(r){ const out = []; r.topics.forEach(t => WS.forEach(w => { if (t.flags[w.k]) out.push({t, w}); })); return out; }
+
+function reviewHTML(){
+	const r = cur(), flags = flaggedList(r), count = Object.keys(state.records).length, as = aboutStats(r);
+	let h = '<header class="sec-head"><p class="eyebrow">Review &amp; share</p><h2>' + esc(recTitle(r)) + '</h2><p class="intro">See where to dig first and what still needs checking, then send it across.</p><p class="sec-meta">Started ' + esc(fmtDate(r.created)) + ' · Updated ' + esc(fmtDate(r.updated)) + '</p></header>';
+	if (r.example) h += '<div class="banner example"><p>You are looking at the example. Start your own to share real answers.</p><button type="button" class="btn" data-act="new">Start my own</button></div>';
+
+	if (!r.topics.length) {
+		h += '<section class="rv"><h3>Coverage</h3><p class="empty">No topics yet. <button type="button" class="linkish" data-go="topics">Add your first topic</button> to get started.</p></section>';
+	} else {
+		const order = digOrder(r);
+		h += '<section class="rv"><h3>Where to dig first</h3><p>Most urgent first. Where urgency ties, the topic you are least clear about comes first.</p><ol class="dig">' +
+			order.map(t => '<li><button type="button" data-go="t:' + esc(t.id) + '">' + esc(t.name) + '</button><span class="why">' + esc(digReason(t)) + '</span></li>').join('') + '</ol></section>';
+		h += '<section class="rv"><h3>Coverage</h3><ul class="cov">' +
+			'<li><button type="button" class="cov-name" data-go="about">About</button><span class="cov-bar' + (as.answered === as.total ? ' complete' : '') + '"><i style="width:' + Math.round(as.answered / as.total * 100) + '%"></i></span><span class="cov-num">' + as.answered + '/' + as.total + '</span><span class="cov-tags"></span></li>' +
+			r.topics.map(t => {
+				const st = topicStats(t), pct = Math.round(st.answered / 6 * 100);
+				const words = '<span class="cov-words" aria-label="Answered: ' + WS.filter(w => has(t.answers[w.k])).map(w => w.word).join(', ') + '">' + WS.map(w => '<b class="' + (has(t.answers[w.k]) ? 'on' : '') + '" aria-hidden="true">' + w.word + '</b>').join('') + '</span>';
+				return '<li><button type="button" class="cov-name" data-go="t:' + esc(t.id) + '">' + esc(t.name) + '</button><span class="cov-bar' + (pct === 100 ? ' complete' : '') + '"><i style="width:' + pct + '%"></i></span><span class="cov-num">' + st.answered + '/6</span><span class="cov-tags">' + words + (st.flagged ? '<span class="pill flag">' + st.flagged + ' to check</span>' : '') + dotsHTML(t.urgency, 'Urgency') + dotsHTML(t.clarity, 'Clarity') + '</span></li>';
+			}).join('') + '</ul></section>';
+	}
+
+	h += '<section class="rv"><h3>To check <span class="pill' + (flags.length ? ' flag' : '') + '">' + flags.length + '</span></h3>';
+	h += flags.length
+		? '<ul class="todo">' + flags.map(x => '<li><span class="where">' + esc(x.t.name) + ' · ' + x.w.word + '</span><button type="button" data-jump="' + esc(x.t.id) + '|' + x.w.k + '">' + esc(qText(x.w, x.t.name)) + '</button>' + (x.t.notes[x.w.k] ? '<span class="note">' + esc(x.t.notes[x.w.k]) + '</span>' : '') + '</li>').join('') + '</ul>'
+		: '<p class="empty">Nothing flagged. If you were unsure about something, tap Not sure under the question so it shows up here.</p>';
+	h += '</section>';
+
+	const saveBtns = scope => (dlState === 'ready' || dlState === 'local')
+		? '<p class="share-label">Save as a file</p><div class="btn-row">' +
+			(scope === 'one' ? '<button type="button" class="btn ghost" data-act="save-md"><svg aria-hidden="true"><use href="#ic-save"/></svg>Summary (.md)</button>' : '') +
+			'<button type="button" class="btn ghost" data-act="save-csv-' + scope + '"><svg aria-hidden="true"><use href="#ic-save"/></svg>Spreadsheet (.csv)</button>' +
+			'<button type="button" class="btn ghost" data-act="save-json-' + scope + '"><svg aria-hidden="true"><use href="#ic-save"/></svg>Data (.json)</button></div>'
+		: dlState === 'none' ? '<p class="sub">Saving files is not available in this view. Copy instead and paste into an email or message.</p>' : '';
+
+	h += '<section class="rv"><h3>Share</h3><p>The summary is for people to read. The data copy lets someone load your answers into their copy of Curiosity or into a system.</p>' +
+		'<div class="share-block"><h4>This inquiry</h4><div class="btn-row"><button type="button" class="btn" data-act="copy-md"><svg aria-hidden="true"><use href="#ic-copy"/></svg>Copy summary</button><button type="button" class="btn ghost" data-act="copy-json-one"><svg aria-hidden="true"><use href="#ic-copy"/></svg>Copy data</button></div>' + saveBtns('one') + '</div>' +
+		'<div class="share-block"><h4>Everything in this browser</h4><p class="sub">' + count + ' inquir' + (count === 1 ? 'y' : 'ies') + ' saved here. Handy for collecting several people or clients into one file.</p><div class="btn-row"><button type="button" class="btn ghost" data-act="copy-json-all"><svg aria-hidden="true"><use href="#ic-copy"/></svg>Copy all data</button></div>' + saveBtns('all') + '</div>' +
+		'<div class="fallback" id="copy-fallback" hidden><p>Copying is blocked here. The text below is selected; use your device\'s copy command.</p><textarea id="copy-fallback-text" readonly aria-label="Text to copy"></textarea></div></section>';
+
+	h += '<section class="rv"><h3>Open a shared inquiry</h3><p>Load a data file someone sent you, or paste data they copied. It is added to this browser alongside your own.</p>' +
+		'<div class="import"><div class="file-pick"><label class="share-label" for="imp-file">Data file</label><input type="file" id="imp-file" accept=".json,application/json"></div>' +
+		'<label class="share-label" for="imp-paste">Or paste data</label><textarea id="imp-paste" rows="4" placeholder="Paste copied data here"></textarea>' +
+		'<div class="btn-row"><button type="button" class="btn ghost" data-act="import-paste">Load pasted data</button></div><p class="msg" id="imp-msg" role="status"></p></div></section>';
+
+	const last = r.topics.length ? 't:' + r.topics[r.topics.length - 1].id : 'topics';
+	h += '<div class="sec-foot"><button type="button" class="btn ghost" data-go="' + esc(last) + '">Back</button><span></span></div>';
+	return h;
+}
+
+/* Exports */
+function exportRec(r){
+	return {
+		id:r.id, title:recTitle(r), created:r.created, updated:r.updated, example:!!r.example, about:r.about,
+		topics:r.topics.map(t => ({
+			id:t.id, name:t.name, urgency:typeof t.urgency === 'number' ? t.urgency : null, clarity:typeof t.clarity === 'number' ? t.clarity : null,
+			responses:WS.map(w => ({question:w.word, asked:qText(w, t.name), answer:has(t.answers[w.k]) ? t.answers[w.k].trim() : null, notSure:!!t.flags[w.k], note:t.notes[w.k] || null})),
+			answers:t.answers, flags:t.flags, notes:t.notes
+		}))
+	};
+}
+function toJSON(recs){ return JSON.stringify({schema:SCHEMA, version:1, exported:nowISO(), records:recs.map(exportRec)}, null, 2); }
+function csvCell(v){ v = v == null ? '' : String(v); return /[",\n\r]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
+function toCSV(recs){
+	const rows = [['inquiry_id','organisation','topic','question','asked','answer','not_sure','note','urgency','clarity','updated']];
+	recs.forEach(r => {
+		ABOUT.forEach(f => rows.push([r.id, recTitle(r), 'About', f.k, f.label, (r.about[f.k] || '').trim(), '', '', '', '', r.updated]));
+		r.topics.forEach(t => WS.forEach(w => rows.push([r.id, recTitle(r), t.name, w.word, qText(w, t.name), (t.answers[w.k] || '').trim(), t.flags[w.k] ? 'yes' : '', t.notes[w.k] || '', typeof t.urgency === 'number' ? t.urgency : '', typeof t.clarity === 'number' ? t.clarity : '', r.updated])));
+	});
+	return rows.map(row => row.map(csvCell).join(',')).join('\r\n');
+}
+function toMarkdown(r){
+	const out = [], flags = flaggedList(r), by = (r.about.person || '').trim();
+	out.push('# Curiosity: ' + recTitle(r), '');
+	out.push((by ? 'Prepared by ' + by + ' · ' : '') + 'Updated ' + fmtDate(r.updated) + (r.example ? ' · Example data' : ''));
+	if (has(r.about.context)) out.push('', r.about.context.trim());
+	if (r.topics.length) {
+		out.push('', '## Where to dig first', '');
+		digOrder(r).forEach((t, i) => out.push((i + 1) + '. **' + t.name + '**: ' + digReason(t)));
+	}
+	out.push('', '## To check (' + flags.length + ')', '');
+	if (!flags.length) out.push('Nothing flagged.');
+	flags.forEach(x => out.push('- **' + x.t.name + ' · ' + x.w.word + ':** ' + qText(x.w, x.t.name) + (x.t.notes[x.w.k] ? ' ' + x.t.notes[x.w.k] : '')));
+	r.topics.forEach(t => {
+		const st = topicStats(t);
+		out.push('', '## ' + t.name + ' (' + st.answered + '/6)');
+		WS.forEach(w => {
+			out.push('', '**' + w.word + '.** ' + qText(w, t.name) + (t.flags[w.k] ? ' _(not sure)_' : ''));
+			out.push(has(t.answers[w.k]) ? t.answers[w.k].trim() : '_No answer yet_');
+		});
+	});
+	return out.join('\n') + '\n';
+}
+
+function showFallback(text){ const box = $('copy-fallback'), ta = $('copy-fallback-text'); if (!box) return; ta.value = text; box.hidden = false; ta.focus(); ta.select(); box.scrollIntoView({block:'nearest'}); }
+function copyText(text, label){
+	const fb = $('copy-fallback'); if (fb) fb.hidden = true;
+	try {
+		if (!navigator.clipboard || !navigator.clipboard.writeText) throw new Error('no clipboard');
+		navigator.clipboard.writeText(text).then(() => toast(label + ' copied'), () => showFallback(text));
+	} catch (e) { showFallback(text); }
+}
+function saveLocal(filename, data){
+	try {
+		const ext = filename.split('.').pop();
+		const type = ext === 'csv' ? 'text/csv' : ext === 'json' ? 'application/json' : 'text/markdown';
+		const url = URL.createObjectURL(new Blob([data], {type: type + ';charset=utf-8'}));
+		const a = document.createElement('a'); a.href = url; a.download = filename;
+		document.body.appendChild(a); a.click(); a.remove();
+		setTimeout(() => URL.revokeObjectURL(url), 4000);
+		toast('File saved');
+	} catch (e) { toast('That file could not be saved. Use Copy instead.'); }
+}
+function saveFile(filename, data){
+	if (dlState === 'local') { saveLocal(filename, data); return; }
+	if (!dl) { toast('Saving files is not available here. Use Copy instead.'); return; }
+	dl.save({filename, data}).then(res => { if (res && res.status === 'saved') toast('File saved'); }).catch(err => {
+		const code = err && err.code;
+		if (code === 'declined') return;
+		if (code === 'rate_limited') { toast('A save is already waiting for you to confirm.'); return; }
+		if (['unavailable','not_granted','capability_disabled','capability_removed','extension_not_enabled'].indexOf(code) > -1) { dl = null; dlState = 'none'; if (state.view === 'review') render(); }
+		toast('That file could not be saved. Use Copy instead.');
+	});
+}
+
+/* Import */
+function cleanStrMap(obj, keys, max){ const out = {}; if (!obj || typeof obj !== 'object') return out; keys.forEach(k => { if (typeof obj[k] === 'string' && obj[k].trim()) out[k] = obj[k].slice(0, max); }); return out; }
+function cleanFlags(obj){ const out = {}; if (!obj || typeof obj !== 'object') return out; WK.forEach(k => { if (obj[k] === true) out[k] = true; }); return out; }
+function cleanScore(v){ return typeof v === 'number' && v >= 1 && v <= 5 ? Math.round(v) : undefined; }
+function importText(txt){
+	const say = (t, ok) => { const m = $('imp-msg'); if (m) { m.textContent = t; m.className = 'msg ' + (ok ? 'ok' : 'err'); } };
+	let data;
+	try { data = JSON.parse(txt); } catch (e) { say('That does not look like Curiosity data. Check you copied all of it, starting with {.'); return; }
+	let recs = null;
+	if (data && data.schema === SCHEMA && Array.isArray(data.records)) recs = data.records;
+	else if (data && Array.isArray(data.topics)) recs = [data];
+	if (!recs || !recs.length) { say(data && data.schema === 'selfdriven-agency.fact-find' ? 'That is a Systems fact-find export. Open it in the Systems fact-find instead.' : 'This is not a Curiosity export.'); return; }
+	let added = 0, updated = 0, skipped = 0, last = null;
+	recs.forEach(x => {
+		if (!x || !Array.isArray(x.topics)) { skipped++; return; }
+		const id = typeof x.id === 'string' && /^[\w-]{3,64}$/.test(x.id) ? x.id : uid();
+		const incoming = {
+			id, created:typeof x.created === 'string' ? x.created : nowISO(), updated:typeof x.updated === 'string' ? x.updated : nowISO(),
+			about:cleanStrMap(x.about, ABOUT.map(f => f.k), 3000),
+			topics:x.topics.slice(0, MAX_TOPICS).filter(t => t && typeof t.name === 'string' && t.name.trim()).map(t => {
+				const nt = {id:typeof t.id === 'string' && /^[\w-]{2,64}$/.test(t.id) ? t.id : uid('t'), name:t.name.trim().slice(0, 60), answers:cleanStrMap(t.answers, WK, 8000), flags:cleanFlags(t.flags), notes:cleanStrMap(t.notes, WK, 1000)};
+				const u = cleanScore(t.urgency), c = cleanScore(t.clarity); if (u) nt.urgency = u; if (c) nt.clarity = c;
+				return nt;
+			})
+		};
+		if (x.example === true) incoming.example = true;
+		const existing = state.records[id];
+		if (existing) {
+			if ((incoming.updated || '') > (existing.updated || '')) { state.records[id] = incoming; updated++; last = id; }
+			else { skipped++; last = last || id; }
+		} else { state.records[id] = incoming; added++; last = id; }
+	});
+	if (last) state.current = last;
+	state.view = 'review';
+	persist(); renderRecords(); buildRail(); render();
+	const parts = []; if (added) parts.push(added + ' added'); if (updated) parts.push(updated + ' updated'); if (skipped) parts.push(skipped + ' already up to date');
+	say('Loaded: ' + (parts.join(', ') || 'nothing new') + '. Now showing ' + recTitle(cur()) + '.', true);
+}
+
+/* Example */
+function makeExample(){
+	const r = blank(); r.example = true;
+	r.about = {org:'Riverbend Growers Co-op', person:'Alex Moreno, coordinator', contact:'alex@riverbend.example', context:'Getting our admin in shape after our first state grant, and helping members feel part of what we do.'};
+	const acc = newTopic('Accounting');
+	acc.answers = {
+		why:'We must report on a state grant by June, and members keep asking where the money goes.',
+		who:'I do the books on weekends. Our treasurer signs off. The board and the grant body read the reports.',
+		what:'Membership fees, market-day sales, grant money, contractor and supplier bills. All tracked in one spreadsheet.',
+		how:'Receipts go into a shared folder. Once a quarter I match them to the bank statement. Cash from markets is written in a notebook.',
+		when:'BAS every quarter, grant report due in June, AGM in August.'
+	};
+	acc.flags = {where:true}; acc.notes = {where:'Check where older receipts went after the Drive clean-up.'};
+	acc.urgency = 5; acc.clarity = 2;
+	const com = newTopic('Internal communication');
+	com.answers = {
+		why:'Members feel out of the loop, and new growers do not know how to join in.',
+		who:'Whoever has time. Mostly me and two volunteers.',
+		what:'A WhatsApp group, Instagram, and an email list nobody updates.',
+		when:'Only when something happens.'
+	};
+	com.flags = {how:true}; com.notes = {how:'Ask the volunteers what they post and how they decide.'};
+	com.urgency = 4; com.clarity = 3;
+	const leg = newTopic('Legal');
+	leg.answers = {why:'We think our co-op rules are out of date, but nobody has read them in years.'};
+	leg.urgency = 2; leg.clarity = 1;
+	r.topics = [acc, com, leg];
+	return r;
+}
+
+/* Render and navigate */
+function render(){
+	if (!viewValid(state.view)) state.view = 'about';
+	const v = state.view;
+	main.innerHTML = v === 'about' ? aboutHTML() : v === 'topics' ? topicsHTML() : v === 'review' ? reviewHTML() : topicHTML(findTopic(cur(), v.slice(2)));
+	refreshNav();
+}
+function go(v, focusW){
+	if (!viewValid(v)) return;
+	state.view = v; scheduleSave(); render();
+	if (focusW) {
+		const el = $('w-' + v.slice(2) + '-' + focusW);
+		if (el) { el.scrollIntoView({block:'center'}); const f = el.querySelector('textarea'); if (f) f.focus({preventScroll:true}); }
+	} else {
+		const top = main.getBoundingClientRect().top;
+		if (top < 0 || top > window.innerHeight * 0.5) main.scrollIntoView({block:'start'});
+		main.focus({preventScroll:true});
+	}
+}
+function curTopic(){ return state.view.indexOf('t:') === 0 ? findTopic(cur(), state.view.slice(2)) : null; }
+function touched(){ cur().updated = nowISO(); scheduleSave(); }
+function refreshTopicView(t, wk){
+	if (wk) { const el = $('w-' + t.id + '-' + wk); if (el) el.classList.toggle('answered', has(t.answers[wk])); }
+	const st = topicStats(t), meta = $('sec-meta');
+	if (meta) meta.textContent = st.answered + ' of 6 answered' + (st.flagged ? ' · ' + st.flagged + ' to check' : '');
+	refreshNav();
+}
+
+function addTopic(name){
+	const r = cur(), msg = $('add-msg');
+	name = (name || '').trim().replace(/\s+/g, ' ').slice(0, 60);
+	if (!name) { if (msg) msg.textContent = 'Type a topic name first.'; return false; }
+	if (r.topics.some(t => t.name.toLowerCase() === name.toLowerCase())) { if (msg) msg.textContent = name + ' is already on your list.'; return false; }
+	if (r.topics.length >= MAX_TOPICS) { if (msg) msg.textContent = 'That is the most topics one inquiry can hold.'; return false; }
+	r.topics.push(newTopic(name)); touched(); buildRail(); render();
+	toast(name + ' added');
+	const inp = $('add-name'); if (inp) inp.focus();
+	return true;
+}
+
+main.addEventListener('submit', ev => {
+	if (ev.target.id === 'add-form') { ev.preventDefault(); const inp = $('add-name'); if (addTopic(inp.value)) { const i2 = $('add-name'); if (i2) i2.value = ''; } }
+});
+main.addEventListener('input', ev => {
+	const t = ev.target, r = cur();
+	if (t.dataset.about) { const k = t.dataset.about; if (has(t.value)) r.about[k] = t.value; else delete r.about[k]; touched(); refreshNav(); const m = $('sec-meta'); if (m) { const s = aboutStats(r); m.textContent = s.answered + ' of ' + s.total + ' answered'; } if (k === 'org') renderRecords(); return; }
+	const tp = curTopic(); if (!tp) return;
+	if (t.dataset.w) { const k = t.dataset.w; if (has(t.value)) tp.answers[k] = t.value; else delete tp.answers[k]; touched(); refreshTopicView(tp, k); return; }
+	if (t.dataset.note) { const k = t.dataset.note; if (has(t.value)) tp.notes[k] = t.value; else delete tp.notes[k]; touched(); return; }
+	if (t.dataset.rename) {
+		const name = t.value.trim().replace(/\s+/g, ' ').slice(0, 60);
+		if (!name || r.topics.some(x => x !== tp && x.name.toLowerCase() === name.toLowerCase())) return;
+		tp.name = name; touched();
+		main.querySelectorAll('.tname').forEach(el => { el.textContent = name; });
+		refreshNav();
+	}
+});
+main.addEventListener('change', ev => {
+	const t = ev.target;
+	if (t.type === 'radio' && t.dataset.gauge && t.checked) { const tp = curTopic(); if (tp && tp[t.dataset.gauge] !== Number(t.value)) { tp[t.dataset.gauge] = Number(t.value); touched(); } return; }
+	if (t.dataset.rename) { const tp = curTopic(); if (tp && t.value.trim() !== tp.name) t.value = tp.name; return; }
+	if (t.id === 'imp-file' && t.files && t.files[0]) {
+		const f = t.files[0];
+		if (f.size > 5 * 1024 * 1024) { const m = $('imp-msg'); m.textContent = 'That file is too large to be a Curiosity export.'; m.className = 'msg err'; return; }
+		const fr = new FileReader();
+		fr.onload = () => importText(String(fr.result || ''));
+		fr.onerror = () => { const m = $('imp-msg'); m.textContent = 'That file could not be read.'; m.className = 'msg err'; };
+		fr.readAsText(f);
+	}
+});
+main.addEventListener('pointerdown', ev => { const l = ev.target.closest && ev.target.closest('label.opt'); if (!l) return; const i = l.querySelector('input[type=radio]'); if (i) i.dataset.was = i.checked ? '1' : '0'; });
+main.addEventListener('keydown', ev => { const t = ev.target; if (t.matches && t.matches('input[type=radio]')) t.dataset.was = (ev.key === ' ' && t.checked) ? '1' : '0'; });
+
+let removeTimer = null;
+main.addEventListener('click', ev => {
+	const t = ev.target;
+	if (t.matches && t.matches('input[type=radio][data-gauge]')) {
+		const tp = curTopic(), k = t.dataset.gauge, val = Number(t.value);
+		if (tp && tp[k] === val && t.dataset.was === '1') { t.checked = false; delete tp[k]; touched(); }
+		return;
+	}
+	const b = t.closest ? t.closest('button') : null; if (!b) return;
+	if (b.dataset.go) { go(b.dataset.go); return; }
+	if (b.dataset.add) { addTopic(b.dataset.add); return; }
+	if (b.dataset.jump) { const p = b.dataset.jump.split('|'); go('t:' + p[0], p[1]); return; }
+	if (b.dataset.move) {
+		const p = b.dataset.move.split('|'), r = cur(), i = r.topics.findIndex(x => x.id === p[0]), j = i + Number(p[1]);
+		if (i < 0 || j < 0 || j >= r.topics.length) return;
+		const tmp = r.topics[i]; r.topics[i] = r.topics[j]; r.topics[j] = tmp;
+		touched(); buildRail(); render();
+		const again = main.querySelector('[data-move="' + p[0] + '|' + p[1] + '"]'); if (again && !again.disabled) again.focus();
+		return;
+	}
+	const tp = curTopic();
+	if (b.dataset.prompt && tp) {
+		const p = b.dataset.prompt.split('|'), w = WS.find(x => x.k === p[0]), text = w.prompts[Number(p[1])];
+		const ta = $(tp.id + '-' + w.k);
+		const before = ta.value.replace(/\s+$/, '');
+		ta.value = (before ? before + '\n\n' : '') + text + '\n';
+		tp.answers[w.k] = ta.value; touched(); refreshTopicView(tp, w.k);
+		ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length);
+		return;
+	}
+	if (b.dataset.flag && tp) {
+		const k = b.dataset.flag, on = !tp.flags[k];
+		if (on) tp.flags[k] = true; else delete tp.flags[k];
+		b.setAttribute('aria-pressed', String(on));
+		const note = b.parentNode.querySelector('.flag-note'); note.hidden = !on;
+		if (on) note.querySelector('input').focus();
+		touched(); refreshTopicView(tp); return;
+	}
+	const act = b.dataset.act; if (!act) return;
+	const r = cur(), base = 'curiosity-' + slug(recTitle(r)) + '-' + today(), all = Object.keys(state.records).map(k => state.records[k]);
+	if (act === 'remove-topic' && tp) {
+		if (b.dataset.armed !== '1') { b.dataset.armed = '1'; b.textContent = 'Tap again to remove'; b.classList.add('danger'); clearTimeout(removeTimer); removeTimer = setTimeout(() => { if (b.isConnected) { b.dataset.armed = ''; b.textContent = 'Remove topic'; b.classList.remove('danger'); } }, 4000); return; }
+		r.topics = r.topics.filter(x => x !== tp); touched(); buildRail(); go('topics'); toast(tp.name + ' removed'); return;
+	}
+	if (act === 'new') newRecord();
+	else if (act === 'example') openExample();
+	else if (act === 'copy-md') copyText(toMarkdown(r), 'Summary');
+	else if (act === 'copy-json-one') copyText(toJSON([r]), 'Data');
+	else if (act === 'copy-json-all') copyText(toJSON(all), 'All data');
+	else if (act === 'save-md') saveFile(base + '.md', toMarkdown(r));
+	else if (act === 'save-csv-one') saveFile(base + '.csv', toCSV([r]));
+	else if (act === 'save-json-one') saveFile(base + '.json', toJSON([r]));
+	else if (act === 'save-csv-all') saveFile('curiosity-all-' + today() + '.csv', toCSV(all));
+	else if (act === 'save-json-all') saveFile('curiosity-all-' + today() + '.json', toJSON(all));
+	else if (act === 'import-paste') { const ta = $('imp-paste'); if (ta && ta.value.trim()) importText(ta.value.trim()); else { const m = $('imp-msg'); m.textContent = 'Paste the copied data into the box first.'; m.className = 'msg err'; } }
+});
+
+rail.addEventListener('click', ev => { const b = ev.target.closest('button[data-go]'); if (b) go(b.dataset.go); });
+recSelect.addEventListener('change', () => { if (state.records[recSelect.value]) { state.current = recSelect.value; if (!viewValid(state.view)) state.view = 'about'; persist(); buildRail(); render(); resetDelete(); } });
+
+function newRecord(){ const r = blank(); state.records[r.id] = r; state.current = r.id; persist(); renderRecords(); buildRail(); go('about'); toast('New inquiry started'); }
+function openExample(){
+	let id = Object.keys(state.records).find(k => state.records[k].example);
+	if (!id) { const ex = makeExample(); state.records[ex.id] = ex; id = ex.id; }
+	state.current = id; persist(); renderRecords(); buildRail(); go('topics');
+}
+$('btn-new').addEventListener('click', newRecord);
+
+const delBtn = $('btn-del'); let delTimer = null;
+function resetDelete(){ clearTimeout(delTimer); delBtn.textContent = 'Delete'; delBtn.classList.remove('danger'); delBtn.dataset.armed = ''; }
+delBtn.addEventListener('click', () => {
+	if (delBtn.dataset.armed !== '1') { delBtn.dataset.armed = '1'; delBtn.textContent = 'Tap again to delete'; delBtn.classList.add('danger'); delTimer = setTimeout(resetDelete, 4000); return; }
+	const gone = recTitle(cur());
+	delete state.records[state.current];
+	const ids = Object.keys(state.records);
+	if (!ids.length) { const r = blank(); state.records[r.id] = r; state.current = r.id; state.view = 'about'; }
+	else state.current = ids.sort((a, b) => (state.records[b].updated || '').localeCompare(state.records[a].updated || ''))[0];
+	if (!viewValid(state.view)) state.view = 'about';
+	resetDelete(); persist(); renderRecords(); buildRail(); render(); toast('Deleted ' + gone);
+});
+
+/* Boot */
+renderRecords(); buildRail(); render(); setStatus();
+try { localStorage.setItem(KEY + '-probe', '1'); localStorage.removeItem(KEY + '-probe'); } catch (e) { storageOK = false; setStatus(); }
+if (window.claude && typeof window.claude.use === 'function') {
+	window.claude.use('downloads').then(d => { dl = d; dlState = d ? 'ready' : 'none'; if (state.view === 'review') render(); }).catch(() => { dlState = 'none'; if (state.view === 'review') render(); });
+} else { dlState = 'local'; }
+})();
+</script>
+
+</body>
+</html>
