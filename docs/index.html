@@ -109,6 +109,8 @@ img{max-width:100%}
 .art-label,.art-foot{position:relative;z-index:3}
 .art-label{font-size:12px;letter-spacing:.15em;padding:25px 28px 0}
 .art-foot{padding:20px 28px;display:flex;justify-content:space-between;align-items:center;gap:16px;font-size:14px}
+.art-readouts{position:absolute;top:18px;right:18px;z-index:3;display:flex;flex-direction:column;gap:12px;text-align:right;font-family:var(--font-display);font-size:30px;font-weight:600;line-height:1;padding:12px 14px;background:rgba(18,16,20,.8);border:1px solid rgba(255,255,255,.12);border-radius:8px;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.art-readouts small{display:block;font-family:var(--font-body);font-size:13px;font-weight:400;letter-spacing:.14em;opacity:.55;margin-bottom:6px}
 
 /* Hero drawing */
 .trace{fill:none;stroke:var(--orange);stroke-width:3;stroke-linejoin:round;stroke-linecap:round}
@@ -243,7 +245,8 @@ section[id],div[id]{scroll-margin-top:20px}
 	.main-content{padding:32px 6% 45px}
 	.hero{grid-template-columns:1fr;gap:32px}
 	.hero-art{min-height:340px}
-	.readouts{display:none}
+	.art-readouts{top:14px;right:14px;gap:8px;font-size:22px;padding:10px 12px}
+	.art-readouts small{font-size:11px;margin-bottom:4px}
 	.button{padding:15px 20px;gap:16px}
 	.values{display:grid;grid-template-columns:1fr 1fr;margin:40px 0;padding:20px 0;gap:10px}
 	.section-heading{display:block}
@@ -350,14 +353,9 @@ section[id],div[id]{scroll-margin-top:20px}
 							<path d="M270.1 236.5 A50 50 0 0 1 316.5 190.1" stroke="#7b6cff"/>
 						</g>
 						<text class="readout" x="320" y="241" font-size="34" font-weight="600" text-anchor="middle" dominant-baseline="central">I</text>
-						<!-- Readouts -->
-						<g class="readouts" text-anchor="end">
-							<text class="readout-label" x="608" y="70">MODES</text><text class="readout" x="608" y="104" font-size="34" font-weight="600">4</text>
-							<text class="readout-label" x="608" y="146">AREAS</text><text class="readout" x="608" y="180" font-size="34" font-weight="600">8</text>
-							<text class="readout-label" x="608" y="222">SCALES</text><text class="readout" x="608" y="256" font-size="34" font-weight="600">3</text>
-						</g>
 					</svg>
 				</span>
+				<span class="art-readouts" aria-hidden="true"><span><small>MODES</small>4</span><span><small>AREAS</small>8</span><span><small>SCALES</small>3</span></span>
 				<span class="art-label">SELFDRIVEN / IN PRACTICE</span>
 				<span class="art-foot"><span>People, organisations, communities. Agency that holds.</span><svg class="arrow-icon" aria-hidden="true"><use href="#ic-arrow"/></svg></span>
 			</a>
