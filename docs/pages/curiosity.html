@@ -86,6 +86,7 @@ button{font:inherit;color:inherit}
 select,input[type=text],textarea{font:inherit;font-size:16px;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:10px 12px;width:100%;min-width:0}
 select{flex:1 1 200px;width:auto;cursor:pointer}
 textarea{resize:vertical;min-height:96px;line-height:1.5}
+textarea.grow{resize:none;overflow-y:hidden}
 input[type=text]:hover,textarea:hover,select:hover{border-color:var(--muted)}
 input[type=text]:focus,textarea:focus,select:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
 
@@ -476,7 +477,7 @@ function aboutHTML(){
 	ABOUT.forEach(f => {
 		const v = r.about[f.k] || '';
 		h += '<div class="field"><label for="a-' + f.k + '">' + esc(f.label) + '</label>' + (f.hint ? '<p class="hint">' + esc(f.hint) + '</p>' : '') +
-			(f.t === 'long' ? '<textarea id="a-' + f.k + '" data-about="' + f.k + '" rows="3">' + esc(v) + '</textarea>' : '<input type="text" id="a-' + f.k + '" data-about="' + f.k + '" value="' + esc(v) + '" autocomplete="off">') + '</div>';
+			(f.t === 'long' ? '<textarea class="grow" id="a-' + f.k + '" data-about="' + f.k + '" rows="3">' + esc(v) + '</textarea>' : '<input type="text" id="a-' + f.k + '" data-about="' + f.k + '" value="' + esc(v) + '" autocomplete="off">') + '</div>';
 	});
 	h += '</div>';
 	h += '<div class="sec-foot"><span></span><button type="button" class="btn" data-go="topics">Next: Topics</button></div>';
@@ -507,7 +508,7 @@ function wHTML(t, w){
 	return '<section class="w' + (has(v) ? ' answered' : '') + '" id="w-' + d + '">' +
 		'<div class="w-head"><span class="w-word" aria-hidden="true">' + w.word + '</span><label class="w-q" for="' + d + '">' + esc(w.q[0]) + '<span class="tname">' + esc(t.name) + '</span>' + esc(w.q[1]) + '</label></div>' +
 		'<div class="prompts" aria-label="Prompts to add to your answer">' + w.prompts.map((p, i) => '<button type="button" class="prompt" data-prompt="' + w.k + '|' + i + '"><svg aria-hidden="true"><use href="#ic-plus"/></svg>' + esc(p) + '</button>').join('') + '</div>' +
-		'<textarea id="' + d + '" data-w="' + w.k + '" rows="4">' + esc(v) + '</textarea>' +
+		'<textarea class="grow" id="' + d + '" data-w="' + w.k + '" rows="4">' + esc(v) + '</textarea>' +
 		'<div class="w-foot"><button type="button" class="flag-btn" data-flag="' + w.k + '" aria-pressed="' + flagged + '"><svg aria-hidden="true"><use href="#ic-flag"/></svg>Not sure</button>' +
 		'<div class="flag-note"' + (flagged ? '' : ' hidden') + '><label for="n-' + d + '">What needs checking, and who would know?</label><input type="text" id="n-' + d + '" data-note="' + w.k + '" value="' + esc(t.notes[w.k] || '') + '" autocomplete="off"></div></div></section>';
 }
@@ -597,7 +598,7 @@ function reviewHTML(){
 
 	h += '<section class="rv"><h3>Open a shared inquiry</h3><p>Load a data file someone sent you, or paste data they copied. It is added to this browser alongside your own.</p>' +
 		'<div class="import"><div class="file-pick"><label class="share-label" for="imp-file">Data file</label><input type="file" id="imp-file" accept=".json,application/json"></div>' +
-		'<label class="share-label" for="imp-paste">Or paste data</label><textarea id="imp-paste" rows="4" placeholder="Paste copied data here"></textarea>' +
+		'<label class="share-label" for="imp-paste">Or paste data</label><textarea class="grow" id="imp-paste" rows="4" placeholder="Paste copied data here"></textarea>' +
 		'<div class="btn-row"><button type="button" class="btn ghost" data-act="import-paste">Load pasted data</button></div><p class="msg" id="imp-msg" role="status"></p></div></section>';
 
 	const last = r.topics.length ? 't:' + r.topics[r.topics.length - 1].id : 'topics';
@@ -750,10 +751,25 @@ function makeExample(){
 }
 
 /* Render and navigate */
+/* Text areas grow with their content up to four times their starting height, then scroll. */
+const GROW_MAX = 4;
+function grow(ta){
+	if (!ta || !ta.isConnected || !ta.offsetParent) return;
+	const y = window.scrollY;
+	ta.style.height = '';
+	const base = ta.offsetHeight, border = ta.offsetHeight - ta.clientHeight;
+	const need = ta.scrollHeight + border, max = base * GROW_MAX;
+	ta.style.height = Math.min(Math.max(need, base), max) + 'px';
+	ta.style.overflowY = need > max ? 'auto' : 'hidden';
+	if (window.scrollY !== y) window.scrollTo(0, y);
+}
+function growAll(){ main.querySelectorAll('textarea.grow').forEach(grow); }
+
 function render(){
 	if (!viewValid(state.view)) state.view = 'about';
 	const v = state.view;
 	main.innerHTML = v === 'about' ? aboutHTML() : v === 'topics' ? topicsHTML() : v === 'review' ? reviewHTML() : topicHTML(findTopic(cur(), v.slice(2)));
+	growAll();
 	refreshNav();
 }
 function go(v, focusW){
@@ -794,6 +810,7 @@ main.addEventListener('submit', ev => {
 });
 main.addEventListener('input', ev => {
 	const t = ev.target, r = cur();
+	if (t.classList && t.classList.contains('grow')) grow(t);
 	if (t.dataset.about) { const k = t.dataset.about; if (has(t.value)) r.about[k] = t.value; else delete r.about[k]; touched(); refreshNav(); const m = $('sec-meta'); if (m) { const s = aboutStats(r); m.textContent = s.answered + ' of ' + s.total + ' answered'; } if (k === 'org') renderRecords(); return; }
 	const tp = curTopic(); if (!tp) return;
 	if (t.dataset.w) { const k = t.dataset.w; if (has(t.value)) tp.answers[k] = t.value; else delete tp.answers[k]; touched(); refreshTopicView(tp, k); return; }
@@ -849,7 +866,7 @@ main.addEventListener('click', ev => {
 		const before = ta.value.replace(/\s+$/, '');
 		ta.value = (before ? before + '\n\n' : '') + text + '\n';
 		tp.answers[w.k] = ta.value; touched(); refreshTopicView(tp, w.k);
-		ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length);
+		grow(ta); ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length);
 		return;
 	}
 	if (b.dataset.flag && tp) {
@@ -902,6 +919,10 @@ delBtn.addEventListener('click', () => {
 	if (!viewValid(state.view)) state.view = 'about';
 	resetDelete(); persist(); renderRecords(); buildRail(); render(); toast('Deleted ' + gone);
 });
+
+let growTimer = null;
+window.addEventListener('resize', () => { clearTimeout(growTimer); growTimer = setTimeout(growAll, 120); });
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(growAll);
 
 /* Boot */
 renderRecords(); buildRail(); render(); setStatus();
